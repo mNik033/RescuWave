@@ -64,42 +64,49 @@ class LoginActivity : BaseActivity() {
 
         btnEnter.setOnClickListener {
             val email : String = inputEmail.text.toString()
-            var userExists = false
             val validEmail = Regex("[a-z0-9]+@[a-z]+.[a-z]{2,3}")
             val validEmail2 = Regex("[a-z0-9]+@[a-z]+.[a-z]+.[a-z]{2,3}")
             val validEmail3 = Regex("[a-z0-9]+@[a-z]+.[a-z]+.[a-z]+.[a-z]{2,3}")
+
             if(!(email.matches(validEmail) || email.matches(validEmail2) || email.matches(validEmail3))){
                 it.hideKeyboard()
                 showErrorSnackbar("Please enter a valid e-mail address")
+            }else if(!isNetworkAvailable(this@LoginActivity)){
+                it.hideKeyboard()
+                showErrorSnackbar("Please connect to the internet")
             }else{
-                // Begin watching for changes in the View hierarchy
-                TransitionManager.beginDelayedTransition(loginContainer as ViewGroup, sharedAxis)
-
-                enterEmail.visibility = View.GONE
-                inputEmailLayout.visibility = View.GONE
-                inputPassLayout.visibility = View.VISIBLE
-                inputPass.requestFocus()
-                enterPass.visibility = View.VISIBLE
-
                 auth.fetchSignInMethodsForEmail(email)
-                    .addOnCompleteListener{
-                        userExists = it.result.signInMethods?.isNotEmpty() ?: false
-                    }
-                btnEnter.setOnClickListener {
-                    val password : String = inputPass.text.toString()
-                    if(password.isEmpty()){
-                        it.hideKeyboard()
-                        showErrorSnackbar("Please enter your password")
-                    }else{
-                        if(userExists){
-                            // Sign-in
-                            signInRegisteredUser(email, password)
-                        }else {
-                            // Sign-up
-                            signUpUser(email, password)
+                    .addOnSuccessListener {
+                        val userExists = it.signInMethods?.isNotEmpty() ?: false
+
+                        // Begin watching for changes in the View hierarchy
+                        TransitionManager.beginDelayedTransition(loginContainer as ViewGroup, sharedAxis)
+
+                        enterEmail.visibility = View.GONE
+                        inputEmailLayout.visibility = View.GONE
+                        inputPassLayout.visibility = View.VISIBLE
+                        inputPass.requestFocus()
+                        enterPass.visibility = View.VISIBLE
+
+                        btnEnter.setOnClickListener {
+                            val password : String = inputPass.text.toString()
+                            if(password.isEmpty()){
+                                it.hideKeyboard()
+                                showErrorSnackbar("Please enter your password")
+                            }else{
+                                if(userExists){
+                                    // Sign-in
+                                    signInRegisteredUser(email, password)
+                                }else {
+                                    // Sign-up
+                                    signUpUser(email, password)
+                                }
+                            }
                         }
+                    }.addOnFailureListener {
+                        (loginContainer as View).hideKeyboard()
+                        showErrorSnackbar(it.toString())
                     }
-                }
             }
         }
     }

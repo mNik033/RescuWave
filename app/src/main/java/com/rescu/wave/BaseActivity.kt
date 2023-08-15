@@ -1,6 +1,8 @@
 package com.rescu.wave
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +32,18 @@ open class BaseActivity : AppCompatActivity() {
     fun View.hideKeyboard() {
         val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val capabilities = connectivityManager
+                .getNetworkCapabilities(connectivityManager.activeNetwork) ?: return false
+            return when {
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ->    true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ->   true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ->   true
+                else ->     false
+            }
     }
 
 }
