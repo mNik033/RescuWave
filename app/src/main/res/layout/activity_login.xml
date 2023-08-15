@@ -41,48 +41,81 @@
         android:text="Login"
         android:textSize="48dp"
         android:textStyle="bold"/>
-    <TextView
-        android:id="@+id/enterText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:text="Enter your e-mail address" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:id="@+id/itextLayout"
+    <LinearLayout
+        android:id="@+id/loginContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="8dp"
-        android:layout_gravity="center">
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/enterEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:text="Enter your e-mail address" />
+        <TextView
+            android:id="@+id/enterPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:visibility="gone"
+            android:text="Enter your password" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:id="@+id/iEmailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_gravity="center">
 
         <com.google.android.material.textfield.TextInputEditText
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:paddingHorizontal="48dp"
-            android:id="@+id/itext"
+            android:id="@+id/iEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:height="60dp"
-            android:inputType="textCapWords"
+            android:inputType="textEmailAddress"
             android:hint="E-Mail" />
-    </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnEnter"
-        android:layout_gravity="center"
-        android:paddingHorizontal="64dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="48dp"
-        android:text="ENTER"
-        android:height="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:id="@+id/iPassLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:visibility="gone"
+            android:layout_gravity="center">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:paddingHorizontal="48dp"
+                android:id="@+id/iPass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:height="60dp"
+                android:inputType="textPassword"
+                android:hint="Password" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEnter"
+            android:layout_gravity="center"
+            android:paddingHorizontal="64dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="48dp"
+            android:text="ENTER"
+            android:height="60dp" />
+
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"/>
     
     <LinearLayout

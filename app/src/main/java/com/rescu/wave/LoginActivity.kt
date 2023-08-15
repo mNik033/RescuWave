@@ -5,16 +5,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.WindowCompat
+import androidx.transition.TransitionManager
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.transition.MaterialSharedAxis
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.rescu.wave.firebase.FirestoreClass
@@ -33,12 +38,19 @@ class LoginActivity : BaseActivity() {
 
         setContentView(R.layout.activity_login)
 
-        val enterText = findViewById<TextView>(R.id.enterText)
+        val enterEmail = findViewById<TextView>(R.id.enterEmail)
+        val enterPass = findViewById<TextView>(R.id.enterPass)
         val btnEnter = findViewById<Button>(R.id.btnEnter)
         val btnGoogleSignIn = findViewById<Button>(R.id.buttonGoogleSignIn)
-        val inputText = findViewById<TextInputEditText>(R.id.itext)
-        val inputTextLayout = findViewById<TextInputLayout>(R.id.itextLayout)
+        val inputEmail = findViewById<TextInputEditText>(R.id.iEmail)
+        val inputPass = findViewById<TextInputEditText>(R.id.iPass)
+        val inputEmailLayout = findViewById<TextInputLayout>(R.id.iEmailLayout)
+        val inputPassLayout = findViewById<TextInputLayout>(R.id.iPassLayout)
+        val loginContainer = findViewById<LinearLayout>(R.id.loginContainer)
         val user = auth.currentUser
+
+        // Set up a new MaterialSharedAxis in the specified axis and direction.
+        val sharedAxis = MaterialSharedAxis(MaterialSharedAxis.X, true)
 
         // Check if user is already signed-in
         if (user != null) {
@@ -51,7 +63,7 @@ class LoginActivity : BaseActivity() {
         }
 
         btnEnter.setOnClickListener {
-            val email : String = inputText.text.toString()
+            val email : String = inputEmail.text.toString()
             var userExists = false
             val validEmail = Regex("[a-z0-9]+@[a-z]+.[a-z]{2,3}")
             val validEmail2 = Regex("[a-z0-9]+@[a-z]+.[a-z]+.[a-z]{2,3}")
@@ -60,19 +72,23 @@ class LoginActivity : BaseActivity() {
                 it.hideKeyboard()
                 showErrorSnackbar("Please enter a valid e-mail address")
             }else{
-                enterText.text = "Enter password"
-                inputTextLayout.hint = "Password"
-                inputText.setText(null)
-                inputText.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                inputText.requestFocus()
+                // Begin watching for changes in the View hierarchy
+                TransitionManager.beginDelayedTransition(loginContainer as ViewGroup, sharedAxis)
+
+                enterEmail.visibility = View.GONE
+                inputEmailLayout.visibility = View.GONE
+                inputPassLayout.visibility = View.VISIBLE
+                inputPass.requestFocus()
+                enterPass.visibility = View.VISIBLE
+
                 auth.fetchSignInMethodsForEmail(email)
                     .addOnCompleteListener{
                         userExists = it.result.signInMethods?.isNotEmpty() ?: false
                     }
                 btnEnter.setOnClickListener {
-                    val password : String = inputText.text.toString()
+                    val password : String = inputPass.text.toString()
                     if(password.isEmpty()){
-                        showErrorSnackbar("Please enter password")
+                        showErrorSnackbar("Please enter your password")
                     }else{
                         if(userExists){
                             // Sign-in
