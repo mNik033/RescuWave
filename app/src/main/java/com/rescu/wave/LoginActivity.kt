@@ -88,6 +88,7 @@ class LoginActivity : BaseActivity() {
                 btnEnter.setOnClickListener {
                     val password : String = inputPass.text.toString()
                     if(password.isEmpty()){
+                        it.hideKeyboard()
                         showErrorSnackbar("Please enter your password")
                     }else{
                         if(userExists){
