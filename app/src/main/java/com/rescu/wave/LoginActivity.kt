@@ -105,7 +105,7 @@ class LoginActivity : BaseActivity() {
                         }
                     }.addOnFailureListener {
                         (loginContainer as View).hideKeyboard()
-                        showErrorSnackbar(it.toString())
+                        showErrorSnackbar(it.message?:"Unknown error")
                     }
             }
         }
