@@ -25,6 +25,15 @@
         <activity
             android:name=".LoginActivity"
             android:exported="false"/>
+
+        <activity
+            android:name=".OtpActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".PhoneOtp"
+            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false"
