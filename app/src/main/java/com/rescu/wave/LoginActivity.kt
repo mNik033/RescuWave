@@ -42,6 +42,7 @@ class LoginActivity : BaseActivity() {
         val enterPass = findViewById<TextView>(R.id.enterPass)
         val btnEnter = findViewById<Button>(R.id.btnEnter)
         val btnGoogleSignIn = findViewById<Button>(R.id.buttonGoogleSignIn)
+        val btnPhoneSignIn = findViewById<Button>(R.id.buttonPhoneSignIn)
         val inputEmail = findViewById<TextInputEditText>(R.id.iEmail)
         val inputPass = findViewById<TextInputEditText>(R.id.iPass)
         val inputEmailLayout = findViewById<TextInputLayout>(R.id.iEmailLayout)
@@ -60,6 +61,10 @@ class LoginActivity : BaseActivity() {
 
         btnGoogleSignIn.setOnClickListener {
             signInLauncher.launch(signInIntent)
+        }
+
+        btnPhoneSignIn.setOnClickListener {
+            startActivity(Intent(this, PhoneOtp::class.java))
         }
 
         btnEnter.setOnClickListener {
