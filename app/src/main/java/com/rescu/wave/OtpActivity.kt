@@ -1,6 +1,7 @@
 package com.rescu.wave
 
 import android.content.Intent
+import android.graphics.Paint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +10,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.WindowCompat
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -30,14 +32,22 @@ class OtpActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         auth=FirebaseAuth.getInstance()
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivityOtpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         otp = intent.getStringExtra("OTP").toString()
         resendtoken = intent.getParcelableExtra("resendToken")!!
         phonenumber = intent.getStringExtra("phoneNumber")!!
 
+        binding.phone.append(phonenumber)
+        binding.phone.paintFlags = binding.phone.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        binding.phone.visibility = View.VISIBLE
+        binding.resend.paintFlags = binding.resend.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+
         addTextChangeListener()
         resendotpvisi()
+        binding.otp1.showKeyboard()
 
         binding.resend.setOnClickListener {
             resendcode()
@@ -64,7 +74,7 @@ class OtpActivity : BaseActivity() {
                 )
                 signInWithPhoneAuthCredential(credential)
             } else {
-                Toast.makeText(this, "Enter Correct OTP", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Enter correct OTP", Toast.LENGTH_SHORT).show()
             }
         } else {
             Toast.makeText(this, "Enter the OTP", Toast.LENGTH_SHORT).show()
@@ -80,12 +90,11 @@ class OtpActivity : BaseActivity() {
         binding.otp4.setText("")
         binding.otp5.setText("")
         binding.otp6.setText("")
-        binding.resend.visibility=View.INVISIBLE
-        binding.resend.isEnabled=false
+        binding.resendLayout.isEnabled=false
 
         Handler(Looper.myLooper()!!).postDelayed(Runnable {
             binding.resend.visibility=View.VISIBLE
-            binding.resend.isEnabled=true
+            binding.resendLayout.isEnabled=true
         },60000)
     }
 
@@ -154,12 +163,12 @@ class OtpActivity : BaseActivity() {
                     Toast.makeText(this, "Authentication successful", Toast.LENGTH_SHORT).show()
                     SendToMain()
 
-
                 } else {
                     // Sign in failed, display a message and update the UI
 
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         // The verification code entered was invalid
+                        showErrorSnackbar("OTP Incorrect")
                     }
                     // Update UI
                 }
@@ -195,7 +204,11 @@ class OtpActivity : BaseActivity() {
                 R.id.otp3 -> if (text.length == 1) binding.otp4.requestFocus() else if (text.isEmpty()) binding.otp2.requestFocus()
                 R.id.otp4 -> if (text.length == 1) binding.otp5.requestFocus() else if (text.isEmpty()) binding.otp3.requestFocus()
                 R.id.otp5 -> if (text.length == 1) binding.otp6.requestFocus() else if (text.isEmpty()) binding.otp4.requestFocus()
-                R.id.otp6 -> if (text.length == 1) signInWithPhone() else if (text.isEmpty()) binding.otp5.requestFocus()
+                R.id.otp6 -> if (text.length == 1) { signInWithPhone()
+                    view.hideKeyboard()
+                }
+                else if (text.isEmpty() && (binding.otp5.text?.length == 0) ) binding.otp1.requestFocus()
+                else if (text.isEmpty() && (binding.otp5.text?.length == 1) ) binding.otp5.requestFocus()
             }
         }
 

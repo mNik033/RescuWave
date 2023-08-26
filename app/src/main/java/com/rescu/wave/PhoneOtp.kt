@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.view.WindowCompat
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -21,11 +22,14 @@ class PhoneOtp : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityPhoneOtpBinding.inflate(layoutInflater)
-
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(binding.root)
+
         auth = FirebaseAuth.getInstance()
+
         binding.btnotp.setOnClickListener {
+
             var number = binding.inumber.text.toString().trim()
             if (number.isNotEmpty()) {
                 if (number.length == 10) {
@@ -40,10 +44,10 @@ class PhoneOtp : BaseActivity() {
                     PhoneAuthProvider.verifyPhoneNumber(options)
 
                 } else {
-                    Toast.makeText(this, "Please Enter Correct Number", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Please enter correct phone number", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "Please the Number", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter your phone number", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -102,7 +106,7 @@ class PhoneOtp : BaseActivity() {
             // by combining the code with a verification ID.
             // Save verification ID and resending token so we can use them later
             val number=binding.inumber.text.toString().trim()
-            val intent = Intent(this@PhoneOtp,OtpActivity::class.java)
+            val intent = Intent(this@PhoneOtp, OtpActivity::class.java)
 
             intent.putExtra("OTP",verificationId)
             intent.putExtra("resendToken",token)

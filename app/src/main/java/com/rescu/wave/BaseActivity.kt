@@ -4,9 +4,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 
@@ -30,8 +30,11 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun View.hideKeyboard() {
-        val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(windowToken, 0)
+        this.windowInsetsController?.hide(WindowInsetsCompat.Type.ime())
+    }
+
+    fun View.showKeyboard() {
+        this.windowInsetsController?.show(WindowInsetsCompat.Type.ime())
     }
 
     fun isNetworkAvailable(context: Context): Boolean {

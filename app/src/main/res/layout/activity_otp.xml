@@ -6,123 +6,190 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".LoginActivity"
-    android:padding="20dp"
-    android:paddingTop="50dp">
+    android:padding="24dp">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/arrow" />
-
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingTop="30dp"
-        android:paddingBottom="30dp"
-        android:src="@drawable/login_graphic" />
+        android:paddingVertical="48dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/arrow" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="center"
+            android:layout_gravity="center"
+            android:src="@drawable/login_graphic" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity=""
         android:orientation="vertical"
         android:paddingBottom="48dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enter The code sent to your number"
-            android:textSize="24dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:text="Enter the code sent to your number"
+            android:textSize="32dp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/typeCodeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Please type the verification code sent"
-            android:paddingTop="10dp"
+            android:text="Please type the verification code sent to"
+            android:paddingTop="16dp"
             android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/phone"
+            android:text = " +91 "
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="30dp">
+            android:paddingTop="32dp">
 
-            <EditText
-                android:id="@+id/otp1"
-                android:maxLength="1"
-                android:inputType="number"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingTop="10dp"
-                tools:ignore="SpeakableTextPresentCheck" />
-            <EditText
-                android:id="@+id/otp2"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingTop="10dp"
-                android:maxLength="1"
-                android:inputType="number"
-                tools:ignore="SpeakableTextPresentCheck" />
-            <EditText
-                android:id="@+id/otp3"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingTop="10dp"
-                android:maxLength="1"
-                android:inputType="number"
-                tools:ignore="SpeakableTextPresentCheck" />
-            <EditText
-                android:id="@+id/otp4"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingTop="10dp"
-                android:maxLength="1"
-                android:inputType="number"
-                tools:ignore="SpeakableTextPresentCheck" />
-            <EditText
-                android:id="@+id/otp5"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingTop="10dp"
-                android:maxLength="1"
-                android:inputType="number"
-                tools:ignore="SpeakableTextPresentCheck" />
-            <EditText
-                android:id="@+id/otp6"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingTop="10dp"
-                android:maxLength="1"
-                android:inputType="number"
-                tools:ignore="SpeakableTextPresentCheck" />
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:layout_marginEnd="4dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/otp1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:layout_marginHorizontal="4dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/otp2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:layout_marginHorizontal="4dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/otp3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:layout_marginHorizontal="4dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/otp4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:layout_marginHorizontal="4dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/otp5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:layout_marginStart="4dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/otp6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/resend"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/resendLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Didn't receive a code? Please Resend !"
-            android:paddingTop="25dp"
-            android:textSize="17dp" />
+            android:visibility="gone"
+            android:paddingTop="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I didn't receive a code! "
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/resend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please resend"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16dp" />
+        </LinearLayout>
 
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnverify"
+        android:layout_gravity="center"
+        android:paddingHorizontal="64dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginVertical="48dp"
-        android:height="50dp"
-        android:paddingHorizontal="64dp"
-        android:text="Verify"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="CONTINUE"
+        android:height="60dp" />
 
 </LinearLayout>
