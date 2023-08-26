@@ -151,21 +151,19 @@ class OtpActivity : BaseActivity() {
 
         }
     }
-    private fun SendToMain() {
-        startActivity(Intent(this, MainActivity::class.java))
-    }
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                     // Sign in success, update UI with the signed-in user's information
                     Toast.makeText(this, "Authentication successful", Toast.LENGTH_SHORT).show()
-                    SendToMain()
 
                 } else {
                     // Sign in failed, display a message and update the UI
-
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         // The verification code entered was invalid
                         showErrorSnackbar("OTP Incorrect")
