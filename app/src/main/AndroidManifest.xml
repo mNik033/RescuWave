@@ -13,8 +13,11 @@
         android:theme="@style/Theme.RescuWave"
         tools:targetApi="31">
         <activity
+            android:name=".RegisterUserActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegisterAgencyActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".IntroActivity"
             android:exported="true">
@@ -32,9 +35,6 @@
             android:exported="false" />
         <activity
             android:name=".PhoneOtp"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
