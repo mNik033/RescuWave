@@ -13,6 +13,9 @@
         android:theme="@style/Theme.RescuWave"
         tools:targetApi="31">
         <activity
+            android:name=".RegisterAgencyActivity"
+            android:exported="true" />
+        <activity
             android:name=".IntroActivity"
             android:exported="true">
             <intent-filter>
@@ -21,19 +24,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LoginActivity"
-            android:exported="false"/>
-
+            android:exported="false" />
         <activity
             android:name=".OtpActivity"
             android:exported="false" />
-
         <activity
             android:name=".PhoneOtp"
             android:exported="false" />
-
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false"

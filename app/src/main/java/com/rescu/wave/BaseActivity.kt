@@ -1,5 +1,6 @@
 package com.rescu.wave
 
+import android.app.Dialog
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -9,8 +10,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.dialog_progress.tv_progress_text
 
 open class BaseActivity : AppCompatActivity() {
+
+    private lateinit var mProgressDialog: Dialog
 
     fun getCurrentUserID(): String {
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -47,6 +51,17 @@ open class BaseActivity : AppCompatActivity() {
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ->   true
                 else ->     false
             }
+    }
+
+    fun showProgressDialog(text: String) {
+        mProgressDialog = Dialog(this)
+        mProgressDialog.setContentView(R.layout.dialog_progress)
+        mProgressDialog.tv_progress_text.text = text
+        mProgressDialog.show()
+    }
+
+    fun hideProgressDialog() {
+        mProgressDialog.dismiss()
     }
 
 }
