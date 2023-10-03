@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ambulance"
+                android:paddingTop="48dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingBottom="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rescu"
+            android:textStyle="bold"
+            android:textSize="24dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wave"
+            android:textStyle="bold"
+            android:textSize="24dp"
+            android:textColor="#FF4285F4" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Who are you?"
+        android:textStyle="bold"
+        android:textSize="32dp"
+        android:paddingVertical="16dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingVertical="24dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnUser"
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                android:layout_width="112dp"
+                android:layout_height="112dp"
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_user"
+                app:iconGravity="textTop"
+                app:iconSize="72dp"
+                app:iconTint="#00000000"
+                android:backgroundTint="#FFFC98BA"
+                app:iconTintMode="add" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                android:layout_width="112dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                app:cornerRadius="8dp"
+                android:text="User"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:backgroundTint="#FFFC98BA"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAgency"
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                android:layout_width="112dp"
+                android:layout_height="112dp"
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_agency"
+                app:iconGravity="textTop"
+                app:iconSize="72dp"
+                app:iconTint="#00000000"
+                android:backgroundTint="#FFC5A9"
+                app:iconTintMode="add" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                android:layout_width="112dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                app:cornerRadius="8dp"
+                android:text="Agency"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:backgroundTint="#FFC5A9"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSupvsr"
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                android:layout_width="112dp"
+                android:layout_height="112dp"
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_supvsr"
+                app:iconGravity="textTop"
+                app:iconSize="72dp"
+                app:iconTint="#00000000"
+                android:backgroundTint="#A9E1FE"
+                app:iconTintMode="add" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                android:layout_width="112dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                app:cornerRadius="8dp"
+                android:text="Supervisor"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:backgroundTint="#A9E1FE"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingVertical="16dp"
+        android:text="Have some confusion?"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:layout_gravity="center" />
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Material3.CardView.Filled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="@color/material_dynamic_neutral90">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Who is the user?"
+                android:paddingBottom="8dp"
+                android:textColor="@color/material_dynamic_neutral10"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="A user is anyone who needs to find or request assistance from a rescue agency."/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Material3.CardView.Filled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="@color/material_dynamic_neutral90">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Who is the agency?"
+                android:paddingBottom="8dp"
+                android:textColor="@color/material_dynamic_neutral10"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" A rescue agency is an organization that provides emergency services in the event of a disaster."/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Material3.CardView.Filled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="@color/material_dynamic_neutral90">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Who is the supervisor?"
+                android:paddingBottom="8dp"
+                android:textColor="@color/material_dynamic_neutral10"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="The supervisor could be a government official that is responsible for overseeing disaster management in a particular area."/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

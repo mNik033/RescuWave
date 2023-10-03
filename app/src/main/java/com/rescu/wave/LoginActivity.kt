@@ -104,7 +104,7 @@ class LoginActivity : BaseActivity() {
                                     signInRegisteredUser(email, password)
                                 }else {
                                     // Sign-up
-                                    val intent = Intent(this, RegisterUserActivity::class.java)
+                                    val intent = Intent(this, RegisterAsActivity::class.java)
                                     intent.putExtra("email", email)
                                     intent.putExtra("password", password)
                                     inputPass.setText("")
