@@ -11,25 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:orientation="horizontal">
-
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"/>
-
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/skip"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
+            android:layout_height="60dp"
+            android:layout_margin="8dp"
             android:background="@android:color/transparent"
             android:text ="Skip"
             android:visibility="visible"
-            android:textColor="@color/black"/>
+            android:textColor="@color/colorPrimary"/>
 
     </LinearLayout>
 
@@ -39,8 +37,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
-
     </androidx.viewpager.widget.ViewPager>
 
 
@@ -110,19 +106,17 @@
 
         </LinearLayout>
 
-
-
     </LinearLayout>
 
     <Button
         android:id="@+id/next"
-        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:paddingHorizontal="64dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="NEXT"/>
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        />
-
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="96dp"
+        android:layout_marginHorizontal="48dp"
+        android:text="Next"
+        android:height="60dp"/>
 </LinearLayout>

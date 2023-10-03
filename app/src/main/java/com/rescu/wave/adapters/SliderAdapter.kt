@@ -1,7 +1,6 @@
-package com.rescu.wave
+package com.rescu.wave.adapters
 
 import android.content.Context
-import android.media.Image
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
@@ -9,15 +8,16 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.getSystemService
+import com.rescu.wave.R
+import com.rescu.wave.models.SliderData
 
-class sliderAdapter(
+class SliderAdapter(
     val context: Context,
-    var sliderList: ArrayList<sliderData>
+    var SliderList: ArrayList<SliderData>
 
-    ) : PagerAdapter() {
+) : PagerAdapter() {
     override fun getCount(): Int {
-        return sliderList.size
+        return SliderList.size
     }
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
@@ -28,12 +28,12 @@ class sliderAdapter(
 
         val layoutInflater: LayoutInflater= context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        val view: View= layoutInflater.inflate(R.layout.slider,container,false)
+        val view: View= layoutInflater.inflate(R.layout.intro_slider,container,false)
         val image= view.findViewById<ImageView>(R.id.image1)
         val title:TextView= view.findViewById(R.id.title)
         val description: TextView= view.findViewById(R.id.description)
 
-        val sliderData: sliderData =sliderList.get(position)
+        val sliderData: SliderData = SliderList.get(position)
         title.text= sliderData.title
         description.text=sliderData.description
         image.setImageResource(sliderData.image)

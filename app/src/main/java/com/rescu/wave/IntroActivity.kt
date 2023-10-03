@@ -6,14 +6,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.view.WindowCompat
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
+import com.rescu.wave.adapters.SliderAdapter
+import com.rescu.wave.models.SliderData
 
 class IntroActivity : AppCompatActivity() {
 
     lateinit var viewPager: ViewPager
-    lateinit var sliderAdapter: sliderAdapter
-    lateinit var sliderList: ArrayList<sliderData>
+    lateinit var SliderAdapter: SliderAdapter
+    lateinit var SliderList: ArrayList<SliderData>
     private lateinit var auth:FirebaseAuth
 
     lateinit var skip : Button
@@ -23,8 +26,8 @@ class IntroActivity : AppCompatActivity() {
     lateinit var dot2 : TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_intro)
-
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
@@ -36,9 +39,9 @@ class IntroActivity : AppCompatActivity() {
             finish()
         }
 
-        viewPager=findViewById(R.id.viewPager)
-        skip= findViewById(R.id.skip)
-        next=findViewById(R.id.next)
+        viewPager = findViewById(R.id.viewPager)
+        skip = findViewById(R.id.skip)
+        next =findViewById(R.id.next)
         dot0 = findViewById(R.id.dot0)
         dot1 = findViewById(R.id.dot1)
         dot2 = findViewById(R.id.dot2)
@@ -48,14 +51,14 @@ class IntroActivity : AppCompatActivity() {
             finish()
         }
 
-        sliderList= ArrayList()
+        SliderList= ArrayList()
 
-        sliderList.add(sliderData("slide1","Desc.1",R.drawable.ambulance))
-        sliderList.add(sliderData("slide2","Desc.2",R.drawable.ambulance))
-        sliderList.add(sliderData("slide3","Desc.3",R.drawable.ambulance))
+        SliderList.add(SliderData("Welcome to RescuWave","Your ultimate companion for staying and prepared in any situation, your safety is our policy.",R.drawable.intro_img0))
+        SliderList.add(SliderData("Personalized Emergency Contacts","Create a personal emergency contact list of your trusted individuals.",R.drawable.intro_img1))
+        SliderList.add(SliderData("Emergency Support at your Fingertips","Find crucial information to handle various kinds of emergencies at all time and anywhere.",R.drawable.intro_img2))
 
-        sliderAdapter= sliderAdapter(this,sliderList)
-        viewPager.adapter=sliderAdapter
+        SliderAdapter= SliderAdapter(this,SliderList)
+        viewPager.adapter=SliderAdapter
 
         viewPager.addOnPageChangeListener(listener)
 
