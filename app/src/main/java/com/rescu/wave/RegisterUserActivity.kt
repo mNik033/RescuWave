@@ -131,6 +131,7 @@ class RegisterUserActivity : BaseActivity() {
                                         }
                                 }
                             } else {
+                                firebaseUser.delete()
                                 Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT)
                                     .show()
                             }
