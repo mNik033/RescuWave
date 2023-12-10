@@ -3,7 +3,6 @@ package com.rescu.wave
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
-import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -142,13 +141,26 @@ class LoginActivity : BaseActivity() {
 
         val response = result.idpResponse
 
-        if (result.resultCode == RESULT_OK) {
-            // Successfully signed in
+        if (result.resultCode == RESULT_OK && response != null) {
+
             val user = FirebaseAuth.getInstance().currentUser
 
-            if(user!=null) {
-                val userInfo = User(user.uid, user.displayName!!, user.email!!, "")
-                FirestoreClass().registerUser(this, userInfo)
+            if(response.isNewUser){
+                // Start registration flow
+                if(user!=null) {
+                    val intent = Intent(this, RegisterAsActivity::class.java)
+                    intent.putExtra("user", user)
+                    intent.putExtra("uid", user.uid)
+                    intent.putExtra("email", user.email)
+                    intent.putExtra("name", user.displayName)
+                    startActivity(intent)
+                }
+            }else {
+                // Signed-in successfully
+                // TODO: Launch respective activities for agency and supervisor
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
                 Toast.makeText(this, "Signed-in successfully!", Toast.LENGTH_LONG).show()
             }
         } else {

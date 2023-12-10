@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.WindowCompat
@@ -40,18 +41,27 @@ class RegisterUserActivity : BaseActivity() {
             resultLauncher.launch("image/*")
         }
 
-        var email: String = intent.getStringExtra("email").toString()
-        var password: String = intent.getStringExtra("password").toString()
-
         // Initialise variables for user info
-        var name : String
-        var phone : Long = 0
+        val uid: String? = intent.getStringExtra("uid")
+        var name: String? = intent.getStringExtra("name")
+        var email: String? = intent.getStringExtra("email")
+        var password: String? = intent.getStringExtra("password")
+        var phone : Long = intent.getLongExtra("phone", 0)
 
         val validNumber = Regex("^[+]?[0-9]{10}\$")
         val validNumber2 = Regex("^[+]"+"91"+"[+]?[0-9]{10}$")
 
-        binding.emailET.setText(email)
+        if(name!="null") binding.nameET.setText(name)
+        if(email!="null") binding.emailET.setText(email)
+        if(phone.toInt()!=0) binding.phoneET.setText(phone.toString())
         binding.passET.setText(password)
+
+        if(uid!="null"){
+            // User registered via Google or phone otp authentication
+            // Password is not required
+            binding.passText.visibility = View.GONE
+            binding.passETLayout.visibility = View.GONE
+        }
 
         binding.btnRegister.setOnClickListener {
 
@@ -68,7 +78,15 @@ class RegisterUserActivity : BaseActivity() {
             it.hideKeyboard()
 
             if (validateForm(name, email, phone, password)) {
-                register(name, email, phone, password)
+                showProgressDialog("Uploading information")
+                if(uid == "null"){
+                    // User registered via email-password authentication
+                    // so create an account for the user first
+                    register(name!!, email!!, phone, password!!)
+                }else {
+                    // User registered via Google or phone otp authentication
+                    uploadDetails(name!!, email!!, phone)
+                }
             }
 
         }
@@ -81,65 +99,38 @@ class RegisterUserActivity : BaseActivity() {
         Glide
             .with(binding.profilePic)
             .load(it)
-            .placeholder(R.drawable.baseline_account_circle_24)
+            .placeholder(R.drawable.profilevector)
             .centerCrop()
             .circleCrop()
             .into(binding.profilePic)
     }
 
     private fun register(name: String, email: String, phone: Long, pass: String) {
-        showProgressDialog("Uploading information")
         firebaseAuth.createUserWithEmailAndPassword(email, pass)
             .addOnCompleteListener { task ->
 
                 if (task.isSuccessful) {
-                    val firebaseUser : FirebaseUser = task.result!!.user!!
-                    val uid = firebaseUser.uid
-                    storageRef = storageRef.child(uid)
+                    uploadDetails(name, email, phone)
+                } else {
+                    hideProgressDialog()
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
 
-                    if(imageUri!=null) {
-                        storageRef.putFile(imageUri!!).addOnCompleteListener { task ->
-                            hideProgressDialog()
+    private fun uploadDetails(name: String, email: String, phone: Long){
+        val firebaseUser : FirebaseUser = firebaseAuth.currentUser!!
+        val uid = firebaseUser.uid
+        storageRef = storageRef.child(uid)
 
-                            if (task.isSuccessful) {
-                                storageRef.downloadUrl.addOnSuccessListener { uri ->
+        if(imageUri!=null) {
+            storageRef.putFile(imageUri!!).addOnCompleteListener { task ->
+                hideProgressDialog()
 
-                                    val user = User(uid, name, email, uri.toString(), "", phone)
+                if (task.isSuccessful) {
+                    storageRef.downloadUrl.addOnSuccessListener { uri ->
 
-                                    firestore.collection("users")
-                                        .document(uid)
-                                        .set(user, SetOptions.merge())
-                                        .addOnCompleteListener { task ->
-                                            if (task.isSuccessful) {
-                                                Toast.makeText(
-                                                    this,
-                                                    "Registered successfully!", Toast.LENGTH_SHORT
-                                                ).show()
-                                                startActivity(
-                                                    Intent(
-                                                        this,
-                                                        MainActivity::class.java
-                                                    )
-                                                )
-                                            } else {
-                                                firebaseUser.delete()
-                                                Toast.makeText(
-                                                    this, task.exception?.message,
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                        }
-                                }
-                            } else {
-                                firebaseUser.delete()
-                                Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        }
-                    } else {
-                        hideProgressDialog()
-
-                        val user = User(uid, name, email, "", "", phone)
+                        val user = User(uid, name, email, uri.toString(), "", phone)
 
                         firestore.collection("users")
                             .document(uid)
@@ -150,12 +141,11 @@ class RegisterUserActivity : BaseActivity() {
                                         this,
                                         "Registered successfully!", Toast.LENGTH_SHORT
                                     ).show()
-                                    startActivity(
-                                        Intent(
-                                            this,
-                                            MainActivity::class.java
-                                        )
-                                    )
+                                    val intent = Intent(this,
+                                        MainActivity::class.java)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                            or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(intent)
                                 } else {
                                     firebaseUser.delete()
                                     Toast.makeText(
@@ -166,13 +156,42 @@ class RegisterUserActivity : BaseActivity() {
                             }
                     }
                 } else {
-                    hideProgressDialog()
-                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+                    firebaseUser.delete()
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
+        } else {
+            hideProgressDialog()
+
+            val user = User(uid, name, email, "", "", phone)
+
+            firestore.collection("users")
+                .document(uid)
+                .set(user, SetOptions.merge())
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(
+                            this,
+                            "Registered successfully!", Toast.LENGTH_SHORT
+                        ).show()
+                        val intent = Intent(this,
+                            MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    } else {
+                        firebaseUser.delete()
+                        Toast.makeText(
+                            this, task.exception?.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+        }
     }
 
-    private fun validateForm(name: String, email: String, phone: Long, password: String) : Boolean {
+    private fun validateForm(name: String?, email: String?, phone: Long, password: String?) : Boolean {
         return when {
             TextUtils.isEmpty(name)->{
                 showErrorSnackbar("Please enter your name")

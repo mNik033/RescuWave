@@ -156,12 +156,23 @@ class OtpActivity : BaseActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    // Sign in success, update UI with the signed-in user's information
-                    Toast.makeText(this, "Authentication successful", Toast.LENGTH_SHORT).show()
-
+                    if(task.result.additionalUserInfo?.isNewUser == true){
+                        // Start registration flow
+                        val intent = Intent(this, RegisterAsActivity::class.java)
+                        val phone : Long = phonenumber.toLong()
+                        val uid : String = task.result.user!!.uid
+                        intent.putExtra("uid", uid)
+                        intent.putExtra("phone", phone)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }else{
+                        // Sign in success, update UI with the signed-in user's information
+                        // TODO: Launch respective activities for agency and supervisor
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        Toast.makeText(this, "Authentication successful", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     // Sign in failed, display a message and update the UI
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {

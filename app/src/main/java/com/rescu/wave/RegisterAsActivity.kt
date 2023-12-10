@@ -14,26 +14,33 @@ class RegisterAsActivity : BaseActivity() {
         setContentView(binding.root)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        val uid: String = intent.getStringExtra("uid").toString()
+        val name: String = intent.getStringExtra("name").toString()
+        val phone : Long = intent.getLongExtra("phone", 0)
         val email : String = intent.getStringExtra("email").toString()
         val password : String = intent.getStringExtra("password").toString()
 
-        binding.btnUser.setOnClickListener{
-            val intent = Intent(this, RegisterUserActivity::class.java)
+        fun launchIntentWithExtras(intent: Intent){
+            intent.putExtra("uid", uid)
+            intent.putExtra("name", name)
+            intent.putExtra("phone", phone)
             intent.putExtra("email", email)
             intent.putExtra("password", password)
             startActivity(intent)
         }
 
+        binding.btnUser.setOnClickListener{
+            val intent = Intent(this, RegisterUserActivity::class.java)
+            launchIntentWithExtras(intent)
+        }
+
         binding.btnAgency.setOnClickListener {
             val intent = Intent(this, RegisterAgencyActivity::class.java)
-            intent.putExtra("email", email)
-            intent.putExtra("password", password)
-            startActivity(intent)
+            launchIntentWithExtras(intent)
         }
 
         binding.btnSupvsr.setOnClickListener {
             // Register as supervisor
         }
     }
-
 }
