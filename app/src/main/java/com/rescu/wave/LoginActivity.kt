@@ -190,7 +190,6 @@ class LoginActivity : BaseActivity() {
                         FirestoreClass().signInUser(this)
                         Toast.makeText(baseContext, "Signed in successfully!",
                             Toast.LENGTH_LONG).show()
-                        val user = auth.currentUser
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else {

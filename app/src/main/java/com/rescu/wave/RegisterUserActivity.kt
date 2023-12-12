@@ -33,7 +33,7 @@ class RegisterUserActivity : BaseActivity() {
 
         firestore = FirebaseFirestore.getInstance()
         firebaseAuth = FirebaseAuth.getInstance()
-        storageRef = FirebaseStorage.getInstance().reference.child("images")
+        storageRef = FirebaseStorage.getInstance().reference.child("images/pfp")
 
         setContentView(binding.root)
 
@@ -130,7 +130,7 @@ class RegisterUserActivity : BaseActivity() {
                 if (task.isSuccessful) {
                     storageRef.downloadUrl.addOnSuccessListener { uri ->
 
-                        val user = User(uid, name, email, uri.toString(), "", phone)
+                        val user = User(uid, name, email, uri.toString(), "", "", phone)
 
                         firestore.collection("users")
                             .document(uid)
@@ -164,7 +164,7 @@ class RegisterUserActivity : BaseActivity() {
         } else {
             hideProgressDialog()
 
-            val user = User(uid, name, email, "", "", phone)
+            val user = User(uid, name, email, "", "", "", phone)
 
             firestore.collection("users")
                 .document(uid)

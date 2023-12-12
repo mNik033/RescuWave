@@ -42,13 +42,30 @@ class FirestoreClass : BaseActivity() {
                 when(activity){
                     is LoginActivity ->{ }
                     is MainActivity -> {
-                        //activity.updateUserDetails(loggedInUser)
+                        activity.updateUserDetails(loggedInUser)
                     }
                 }
             }
             .addOnFailureListener { e->
                 Log.e(activity.javaClass.simpleName, "Error writing document")
             }
+    }
+
+    fun updateUserDetails(image: String?, address: String?): Boolean{
+        var updated = true
+        val dbRef = mFireStore.collection("users").document(getCurrentUserID())
+        if(image!=null){
+            dbRef.set(hashMapOf("image" to image), SetOptions.merge()).addOnFailureListener {
+                updated = false
+            }
+        }
+        if(!updated) return updated
+        if(address!=null){
+            dbRef.set(hashMapOf("savedAddr" to address), SetOptions.merge()).addOnFailureListener {
+                updated = false
+            }
+        }
+        return updated
     }
 
 }
