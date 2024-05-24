@@ -4,70 +4,252 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment"
     android:padding="24dp"
     android:orientation="vertical" >
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hey,"
-        android:textSize="32dp"
-        android:textColor="@color/colorPrimary"
-        android:paddingTop="96dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="What happened?"
-        android:textSize="32dp"
+        android:text="Are you in an emergency?"
+        android:textSize="24dp"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimary" />
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:paddingTop="60dp" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select an issue and know the first aid procedure."
-        android:textSize="16dp"
-        android:textColor="@color/colorPrimary"
-        android:paddingVertical="16dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/aidRecylerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginVertical="16dp" >
+        android:text="Slide over the slider, your live location will be shared with the nearest help centre and your emergency contacts."
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:paddingVertical="16dp"
+        android:textColor="#FF808080" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:background="@color/material_on_surface_stroke"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="What is your emergency/requirements?"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:paddingTop="32dp"
+        android:paddingBottom="16dp"/>
 
-        <TextView
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_fire"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="OR"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:paddingHorizontal="16dp"/>
+            app:icon="@drawable/ic_firetruck"
+            app:iconTint="#00000000"
+            app:iconTintMode="add"
+            app:iconSize="24dp"
+            app:iconGravity="start"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            app:strokeColor="@drawable/emergency_button_outline"
+            app:backgroundTint="@drawable/emergency_button_bg"
+            app:cornerRadius="4dp"
+            android:height="60dp"
+            android:textSize="16dp"
+            android:textStyle="normal"
+            android:gravity="start|center_vertical"
+            android:text="Fire"
+            app:iconPadding="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="#FF808080" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:background="@color/material_on_surface_stroke"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_ambulance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_ambulance"
+            app:iconTint="#00000000"
+            app:iconTintMode="add"
+            app:iconSize="24dp"
+            app:iconGravity="start"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            app:strokeColor="@drawable/emergency_button_outline"
+            app:backgroundTint="@drawable/emergency_button_bg"
+            app:cornerRadius="4dp"
+            android:height="60dp"
+            android:textSize="16dp"
+            android:textStyle="normal"
+            android:gravity="start|center_vertical"
+            android:text="Ambulance"
+            app:iconPadding="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="#FF808080" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_disaster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_disaster"
+            app:iconTint="#00000000"
+            app:iconTintMode="add"
+            app:iconSize="24dp"
+            app:iconGravity="start"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            app:strokeColor="@drawable/emergency_button_outline"
+            app:backgroundTint="@drawable/emergency_button_bg"
+            app:cornerRadius="4dp"
+            android:height="60dp"
+            android:textSize="16dp"
+            android:textStyle="normal"
+            android:gravity="start|center_vertical"
+            android:text="Natural Disaster"
+            app:iconPadding="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="#FF808080" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_accident"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_accident"
+            app:iconTint="#00000000"
+            app:iconTintMode="add"
+            app:iconSize="24dp"
+            app:iconGravity="start"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            app:strokeColor="@drawable/emergency_button_outline"
+            app:backgroundTint="@drawable/emergency_button_bg"
+            app:cornerRadius="4dp"
+            android:height="60dp"
+            android:textSize="16dp"
+            android:textStyle="normal"
+            android:gravity="start|center_vertical"
+            android:text="Accident"
+            app:iconPadding="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="#FF808080" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="24dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_women_safety"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_womensafety"
+            app:iconTint="#00000000"
+            app:iconTintMode="add"
+            app:iconSize="24dp"
+            app:iconGravity="start"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            app:strokeColor="@drawable/emergency_button_outline"
+            app:backgroundTint="@drawable/emergency_button_bg"
+            app:cornerRadius="4dp"
+            android:height="60dp"
+            android:textSize="16dp"
+            android:textStyle="normal"
+            android:gravity="start|center_vertical"
+            android:text="Women Safety"
+            app:iconPadding="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="#FF808080" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_others"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_others"
+            app:iconTint="#00000000"
+            app:iconTintMode="add"
+            app:iconSize="24dp"
+            app:iconGravity="start"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            app:strokeColor="@drawable/emergency_button_outline"
+            app:backgroundTint="@drawable/emergency_button_bg"
+            app:cornerRadius="4dp"
+            android:height="60dp"
+            android:textSize="16dp"
+            android:textStyle="normal"
+            android:gravity="start|center_vertical"
+            android:text="Others"
+            app:iconPadding="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="#FF808080" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/round_add_location_24"
+        android:alpha="1"
+        app:iconTint="#3DCB6D"
+        app:iconSize="24dp"
+        app:iconGravity="end"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        app:strokeColor="@drawable/emergency_button_outline"
+        app:backgroundTint="@drawable/emergency_button_bg"
+        app:cornerRadius="4dp"
+        android:minHeight="60dp"
+        android:textSize="16dp"
+        android:textStyle="normal"
+        android:gravity="start|center_vertical"
+        android:text="Your current location"
+        android:paddingVertical="16dp"
+        android:textColor="#FF808080" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_first_aid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/baseline_local_hospital_24"
+        android:alpha="1"
+        app:iconTint="#F42828"
+        android:backgroundTint="#0DFF0000"
+        app:iconSize="24dp"
+        app:iconGravity="end"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:minHeight="60dp"
+        android:textSize="16dp"
+        android:textStyle="normal"
+        android:gravity="start|center_vertical"
+        android:text="First Aids"
+        android:paddingVertical="16dp"
+        android:layout_marginVertical="16dp"
+        android:textColor="#FF808080" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <com.chinalwb.slidetoconfirmlib.SlideToConfirm
         android:id="@+id/slideLayout"
@@ -83,10 +265,10 @@
         app:slider_reset_duration="1000"
         app:slider_vibration_duration="1000"
         app:slider_threshold="1dp"
-        app:engage_text="Swipe to book an ambulance"
+        app:engage_text="Swipe to contact emergency services"
         app:engage_text_size="16dp"
         app:engage_text_color="@color/colorPrimary"
-        app:completed_text="Contacting ambulances nearby..."
+        app:completed_text="Contacting emergency services..."
         app:completed_text_color="@android:color/white"
         app:completed_text_size="16dp"
         tools:context=".MainActivity" >

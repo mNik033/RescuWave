@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true" android:color="@color/selected_btn_color" />
+    <item android:color="@color/fui_transparent" />
+</selector>

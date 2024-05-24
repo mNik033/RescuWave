@@ -1,20 +1,40 @@
 package com.rescu.wave.fragments
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import com.chinalwb.slidetoconfirmlib.ISlideListener
+import com.chinalwb.slidetoconfirmlib.SlideToConfirm
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.OnTokenCanceledListener
+import com.rescu.wave.EmergencyCallActivity
+import com.rescu.wave.FirstAidsActivity
 import com.rescu.wave.R
-import com.rescu.wave.models.Aid
+import java.util.Locale
 
 class HomeFragment : Fragment() {
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1
+    private val selectedEmergencies = mutableListOf<String>()
+    var lat : Double = 0.0
+    var long : Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,36 +44,135 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    private lateinit var aidList: ArrayList<Aid>
-    private var db = Firebase.firestore
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recView = view.findViewById<RecyclerView>(R.id.aidRecylerView)
-        recView.layoutManager = GridLayoutManager(activity, 3)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        val locationButton = view.findViewById<Button>(R.id.button_location)
 
-        aidList = arrayListOf()
-        val adapter = AidRecyclerAdapter(aidList)
-        db = FirebaseFirestore.getInstance()
+        if (ContextCompat.checkSelfPermission(requireActivity().baseContext,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE)
+        } else {
+            fetchLocation(locationButton)
+        }
 
-        db.collection("aids").get()
-            .addOnSuccessListener {
-                if (!it.isEmpty){
-                    for(data in it.documents) {
-                        val aidItem: Aid? = data.toObject(Aid::class.java)
-                        //TODO display something to represent there's no data
-                        if (aidItem != null) {
-                            aidList.add(aidItem)
-                        }
-                    }
-                    recView.adapter = adapter
-                    //TODO: add on item click listener
+        val emergencyButtons : List<Button> = listOf(
+            view.findViewById(R.id.button_fire),
+            view.findViewById(R.id.button_ambulance),
+            view.findViewById(R.id.button_disaster),
+            view.findViewById(R.id.button_accident),
+            view.findViewById(R.id.button_women_safety),
+            view.findViewById(R.id.button_others)
+        )
+
+        for (button in emergencyButtons) {
+            button.setOnClickListener {
+                val emergencyType = button.text.toString()
+                if (selectedEmergencies.contains(emergencyType)) {
+                    selectedEmergencies.remove(emergencyType)
+                    button.isSelected = false
+                } else {
+                    selectedEmergencies.add(emergencyType)
+                    button.isSelected = true
                 }
             }
-            .addOnFailureListener{
-                Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
+        }
+
+        val firstAidBtn = view.findViewById<Button>(R.id.button_first_aid)
+        firstAidBtn.setOnClickListener {
+            startActivity(Intent(requireActivity(), FirstAidsActivity::class.java))
+        }
+
+        val slideToConfirm: SlideToConfirm? = view.findViewById(R.id.slideLayout)
+        slideToConfirm?.slideListener = object : ISlideListener {
+            override fun onSlideStart() {
+                // Log.w("1", "on start !! ")
             }
+            override fun onSlideMove(percent: Float) {
+                // Log.w("2", "on move !! == $percent")
+            }
+            override fun onSlideCancel() {
+                // Log.w("3", "on cancel !! ")
+            }
+            override fun onSlideDone() {
+                // Log.w("4", "on Done!!")
+                val intent = Intent(activity, EmergencyCallActivity::class.java)
+                val emergencyInfo = Bundle()
+                emergencyInfo.putStringArrayList("emergencies", ArrayList(selectedEmergencies))
+                emergencyInfo.putString("address", locationButton.text.toString())
+                emergencyInfo.putDouble("latitude", lat)
+                emergencyInfo.putDouble("longitude", long)
+                intent.putExtras(emergencyInfo)
+                startActivity(intent)
+
+                slideToConfirm?.postDelayed({ slideToConfirm.reset() }, 500)
+            }
+        }
+
+    }
+
+    private fun fetchLocation(locBtn: Button) {
+        var addr : String? = null
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return
+        }
+
+        // fetch the last location
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            location?.let {
+                val latitude = it.latitude
+                val longitude = it.longitude
+                addr = getAddressFromLatLng(latitude, longitude, locBtn)
+            }
+        }.addOnFailureListener {
+            Toast.makeText(requireContext(), "Last location not available, fetching new...", Toast.LENGTH_SHORT).show()
+        }
+
+        if(addr!=null) return
+
+        // if not available, get the current location
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, object : CancellationToken(){
+            override fun onCanceledRequested(p0: OnTokenCanceledListener) = CancellationTokenSource().token
+            override fun isCancellationRequested() = false
+        }).addOnSuccessListener { location: Location? ->
+            location?.let {
+                Toast.makeText(activity, "Current location updated", Toast.LENGTH_SHORT).show()
+                val address = it.toString()
+                val latitude = it.latitude
+                val longitude = it.longitude
+                addr = getAddressFromLatLng(latitude, longitude, locBtn)
+            }
+        }.addOnFailureListener {
+            Toast.makeText(activity, "Failed to fetch current location", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun getAddressFromLatLng(latitude: Double, longitude: Double, locBtn: Button): String? {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        val addresses: List<Address>?
+
+        return try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            if (addresses != null && addresses.isNotEmpty()) {
+                val address = addresses[0]
+                lat = latitude
+                long = longitude
+                locBtn.text = address.getAddressLine(0)
+                address.getAddressLine(0) // Get the full address
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
 }

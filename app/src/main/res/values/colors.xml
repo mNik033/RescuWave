@@ -9,4 +9,8 @@
     <color name="colorPrimary">#FF4285F4</color>
     <color name="white">#FFFFFFFF</color>
     <color name="snackbar_error_color">@color/design_default_color_error</color>
+    <color name="default_btn_color">@color/white</color>
+    <color name="selected_btn_color">#334285F4</color>
+    <color name="default_btn_color_outline">#FF808080</color>
+    <color name="selected_btn_color_outline">#FF4285F4</color>
 </resources>

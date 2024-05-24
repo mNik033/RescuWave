@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FirstAidsActivity"
+    android:padding="24dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hey,"
+        android:textSize="32dp"
+        android:textColor="@color/colorPrimary"
+        android:paddingTop="48dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="What happened?"
+        android:textSize="32dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select an issue and know the first aid procedure."
+        android:textSize="16dp"
+        android:textColor="@color/colorPrimary"
+        android:paddingVertical="16dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/aidRecylerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
+</LinearLayout>

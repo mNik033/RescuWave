@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EmergencyCallActivity"
+    android:background="@drawable/bg_gradient"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="24dp"
+    android:paddingBottom="84dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/headertxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Calling emergency!"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:paddingTop="60dp" />
+
+    <TextView
+        android:id="@+id/desctxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Please stand by, we are currently requesting for help. Your emergency contacts and nearby rescue services would see your call for help."
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:paddingVertical="16dp"
+        android:textColor="#E9A7B3" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <RelativeLayout
+        android:id="@+id/rippleAnim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:scaleX="1.25"
+            android:scaleY="1.25"
+            app:lottie_rawRes="@raw/ripple" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_em_call"
+            app:contentPadding="16dp"
+            app:shapeAppearanceOverlay="@style/circleImageView" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnViewMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        app:cornerRadius="8dp"
+        android:layout_marginVertical="8dp"
+        android:text="VIEW ON MAP"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSafeNow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        app:cornerRadius="8dp"
+        android:text="I'M SAFE NOW, CANCEL ALERT" />
+
+</LinearLayout>

@@ -89,4 +89,11 @@ dependencies {
         // Excludes the support library because it's already included by Glide.
         transitive = false
     }
+
+    // location tracking
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    //lottie files
+    def lottieVersion = "6.4.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
 }
