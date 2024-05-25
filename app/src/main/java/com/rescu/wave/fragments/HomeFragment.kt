@@ -7,6 +7,8 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +17,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.chinalwb.slidetoconfirmlib.ISlideListener
 import com.chinalwb.slidetoconfirmlib.SlideToConfirm
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -23,8 +26,11 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
+import com.rescu.wave.BaseActivity
 import com.rescu.wave.EmergencyCallActivity
 import com.rescu.wave.FirstAidsActivity
+import com.rescu.wave.RealmViewModel
+import com.rescu.wave.RealmStuff
 import com.rescu.wave.R
 import java.util.Locale
 
@@ -33,6 +39,7 @@ class HomeFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private val selectedEmergencies = mutableListOf<String>()
+    private val viewModel: RealmViewModel by viewModels()
     var lat : Double = 0.0
     var long : Double = 0.0
 
@@ -56,7 +63,14 @@ class HomeFragment : Fragment() {
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 LOCATION_PERMISSION_REQUEST_CODE)
         } else {
-            fetchLocation(locationButton)
+            Handler(Looper.getMainLooper()).post {
+                // delay context-sensitive operations
+                // until the fragment is fully attached
+                if (isAdded) {
+                    fetchLocation(locationButton)
+                }
+            }
+
         }
 
         val emergencyButtons : List<Button> = listOf(
@@ -86,6 +100,11 @@ class HomeFragment : Fragment() {
             startActivity(Intent(requireActivity(), FirstAidsActivity::class.java))
         }
 
+        val viewEmergencyButton = view.findViewById<Button>(R.id.button_emergency)
+        viewEmergencyButton.setOnClickListener {
+            startActivity(Intent(activity, EmergencyCallActivity::class.java))
+        }
+
         val slideToConfirm: SlideToConfirm? = view.findViewById(R.id.slideLayout)
         slideToConfirm?.slideListener = object : ISlideListener {
             override fun onSlideStart() {
@@ -112,6 +131,24 @@ class HomeFragment : Fragment() {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // If emergency has been issued, show a button
+        // to reflect the same, instead of the slider
+        val uid = BaseActivity().getCurrentUserID()
+        val slideToConfirm = view?.findViewById<SlideToConfirm>(R.id.slideLayout)
+        val viewEmergencyButton = view?.findViewById<Button>(R.id.button_emergency)
+
+        if(viewModel.getEmergencyByUserID(uid)!=null) {
+            slideToConfirm?.visibility = View.GONE
+            viewEmergencyButton?.visibility = View.VISIBLE
+            RealmStuff.currentEmergencyId = viewModel.getEmergencyByUserID(uid)
+        }else{
+            slideToConfirm?.visibility = View.VISIBLE
+            viewEmergencyButton?.visibility = View.GONE
+        }
     }
 
     private fun fetchLocation(locBtn: Button) {

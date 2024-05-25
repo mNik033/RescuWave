@@ -1,11 +1,15 @@
 package com.rescu.wave.models
 
-data class User(
-    val id : String = "",
-    val name : String = "",
-    val email : String = "",
-    val image : String = "",
-    val fcmToken : String = "",
-    val savedAddr : String = "",
-    val phone :Long = 0
-)
+import io.realm.kotlin.types.RealmObject
+
+open class User(
+    var id: String = "",
+    var name: String = "",
+    var email: String = "",
+    var image: String = "",
+    var fcmToken: String = "",
+    var savedAddr: String = "",
+    var phone: Long = 0
+) : RealmObject {
+    constructor() : this("", "", "", "", "", "", 0)
+}

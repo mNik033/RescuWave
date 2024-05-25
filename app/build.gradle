@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
     id 'kotlin-android-extensions'
+    id 'io.realm.kotlin'
 }
 
 android {
@@ -96,4 +97,8 @@ dependencies {
     //lottie files
     def lottieVersion = "6.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    // MongoDB Realm
+    implementation 'io.realm.kotlin:library-base:1.6.1'
+    implementation 'io.realm.kotlin:library-sync:1.6.1'
 }

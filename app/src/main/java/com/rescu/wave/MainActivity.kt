@@ -1,15 +1,18 @@
 package com.rescu.wave
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rescu.wave.firebase.FirestoreClass
 import com.rescu.wave.fragments.ProfileFragmentViewModel
 import com.rescu.wave.models.User
+import com.rescu.wave.models.UserManager
 
 class MainActivity : BaseActivity() {
 
@@ -31,7 +34,29 @@ class MainActivity : BaseActivity() {
         // Hook navigation controller to bottom navigation view
         setupWithNavController(bottomNavigationView, navController)
 
+        var shouldNavigateToMapFragment = false
+        val dataFromEmergencyCall = intent
+        val value = dataFromEmergencyCall.getIntExtra("key", 0)
+        if (value == 17)
+            shouldNavigateToMapFragment = true
+
+        if (shouldNavigateToMapFragment)
+            navController.navigate(R.id.mapFragment, null, NavOptions.Builder()
+                .setPopUpTo(R.id.homeFragment, true)
+                .build())
+
         FirestoreClass().signInUser(this)
+
+        // Fetch user data for future use
+        UserManager.fetchUserData(
+            onSuccess = {
+                // User data fetched successfully
+            },
+            onFailure = { exception ->
+                // Handle the error
+                Log.e("MainActivityTAG", "Error fetching user data", exception)
+            }
+        )
 
     }
 

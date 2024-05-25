@@ -16,6 +16,11 @@
         android:label="fragment_hospitals"
         tools:layout="@layout/fragment_hospitals" />
     <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.rescu.wave.fragments.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
+    <fragment
         android:id="@+id/profileFragment"
         android:name="com.rescu.wave.fragments.ProfileFragment"
         android:label="fragment_profile"

@@ -11,6 +11,11 @@
         android:icon="@drawable/ic_phone"
         android:title="Hospitals"/>
     <item
+        android:id="@+id/mapFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_map"
+        android:title="Map"/>
+    <item
         android:id="@+id/profileFragment"
         android:enabled="true"
         android:icon="@drawable/ic_profile"

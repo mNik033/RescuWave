@@ -233,7 +233,8 @@
         app:icon="@drawable/baseline_local_hospital_24"
         android:alpha="1"
         app:iconTint="#F42828"
-        android:backgroundTint="#0DFF0000"
+        android:backgroundTint="#0DF42828"
+        app:cornerRadius="4dp"
         app:iconSize="24dp"
         app:iconGravity="end"
         style="@style/Widget.Material3.Button.TonalButton"
@@ -273,5 +274,17 @@
         app:completed_text_size="16dp"
         tools:context=".MainActivity" >
     </com.chinalwb.slidetoconfirmlib.SlideToConfirm>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_emergency"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:textSize="16dp"
+        android:gravity="center"
+        android:backgroundTint="#F42828"
+        android:visibility="gone"
+        android:text="EMERGENCY ISSUED. TAP TO VIEW"/>
+
 
 </LinearLayout>
