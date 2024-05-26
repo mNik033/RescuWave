@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rescu.wave.models.Emergency
+import com.rescu.wave.models.User
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.query.RealmResults
@@ -44,7 +45,12 @@ class RealmViewModel : ViewModel() {
             realm.write {
                 val emergencyToDelete = query<Emergency>("_id == $0", emergencyId).first().find()
                 if (emergencyToDelete != null) {
+                    val userToDelete = query<User>("id == $0", emergencyToDelete.user!!.id).first().find()
                     delete(emergencyToDelete)
+                    // delete the corresponding user as well to avoid duplication
+                    if (userToDelete != null) {
+                        delete(userToDelete)
+                    }
                 }
             }
             loadEmergencies()
