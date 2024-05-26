@@ -1,6 +1,6 @@
 package com.rescu.wave.models
 
-import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.EmbeddedRealmObject
 
 open class User(
     var id: String = "",
@@ -10,6 +10,6 @@ open class User(
     var fcmToken: String = "",
     var savedAddr: String = "",
     var phone: Long = 0
-) : RealmObject {
+) : EmbeddedRealmObject {
     constructor() : this("", "", "", "", "", "", 0)
 }

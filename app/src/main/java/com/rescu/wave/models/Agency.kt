@@ -1,6 +1,6 @@
 package com.rescu.wave.models
 
-import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.EmbeddedRealmObject
 
 open class Agency(
     var id : String = "",
@@ -11,6 +11,6 @@ open class Agency(
     var location : String = "",
     var employeeCount : String = "",
     var vehicleCount : String =""
-) : RealmObject {
+) : EmbeddedRealmObject {
     constructor() : this("", "", "", "", 0, "", "", "")
 }

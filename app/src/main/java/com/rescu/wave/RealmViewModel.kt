@@ -5,9 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rescu.wave.models.Emergency
-import com.rescu.wave.models.User
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.mongodb.subscriptions
+import io.realm.kotlin.notifications.InitialResults
+import io.realm.kotlin.notifications.ResultsChange
+import io.realm.kotlin.notifications.UpdatedResults
 import io.realm.kotlin.query.RealmResults
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
@@ -20,13 +23,26 @@ class RealmViewModel : ViewModel() {
     val emergencies: LiveData<List<Emergency>> get() = _emergencies
 
     init {
-        loadEmergencies()
+        viewModelScope.launch {
+            realm.subscriptions.waitForSynchronization()
+            loadEmergencies()
+        }
     }
 
     private fun loadEmergencies() {
         viewModelScope.launch {
             val results: RealmResults<Emergency> = realm.query<Emergency>().find()
-            _emergencies.postValue(results)
+            // Observe changes using Flow
+            results.asFlow().collect { changes: ResultsChange<Emergency> ->
+                when (changes) {
+                    is InitialResults -> {
+                        _emergencies.postValue(changes.list)
+                    }
+                    is UpdatedResults -> {
+                        _emergencies.postValue(changes.list)
+                    }
+                }
+            }
         }
     }
 
@@ -45,12 +61,7 @@ class RealmViewModel : ViewModel() {
             realm.write {
                 val emergencyToDelete = query<Emergency>("_id == $0", emergencyId).first().find()
                 if (emergencyToDelete != null) {
-                    val userToDelete = query<User>("id == $0", emergencyToDelete.user!!.id).first().find()
                     delete(emergencyToDelete)
-                    // delete the corresponding user as well to avoid duplication
-                    if (userToDelete != null) {
-                        delete(userToDelete)
-                    }
                 }
             }
             loadEmergencies()

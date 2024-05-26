@@ -31,10 +31,11 @@ class MapFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.emergencies.observe(requireActivity(), Observer { emergencyList ->
+        viewModel.emergencies.observe(viewLifecycleOwner, Observer { emergencyList ->
             if(!emergencyList.isNullOrEmpty()){
+                mapText.text = "" //  clear previous text
                 for(it in emergencyList){
-                    mapText.setText("${it.user?.name} has the emergencies regarding:  ")
+                    mapText.append("${it.user?.name} has the emergencies regarding:  ")
                     mapText.append(it.emergencyTypes.joinToString(", "))
                     mapText.append("with the coordinates ${it.latitude}, ${it.longitude}, address: ${it.address}.")
                     mapText.append("\nThe agencies involved are: \n")

@@ -9,7 +9,7 @@ import androidx.core.view.WindowCompat
 import com.rescu.wave.databinding.ActivityEmergencyCallBinding
 import com.rescu.wave.models.Emergency
 import com.rescu.wave.models.UserManager
-import io.realm.kotlin.ext.realmSetOf
+import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.ext.toRealmSet
 import kotlinx.android.synthetic.main.activity_emergency_call.btnSafeNow
 import kotlinx.android.synthetic.main.activity_emergency_call.btnViewMap
@@ -54,7 +54,7 @@ class EmergencyCallActivity : BaseActivity() {
                 longitude = long
                 address = addr
                 emergencyTypes = emergencies!!.toRealmSet()
-                agenciesInvolved = realmSetOf()
+                agenciesInvolved = realmListOf()
                 // agenciesInvoled will be updated as and when they add themselves
             }
 

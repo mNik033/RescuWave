@@ -17,6 +17,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField "String", "REALM_APP_ID", "\"${MY_REALM_APP_ID}\""
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -37,6 +39,7 @@ android {
         jvmTarget = '1.8'
     }
     buildFeatures {
+        buildConfig true
         compose true
         viewBinding true
     }
@@ -99,6 +102,6 @@ dependencies {
     implementation "com.airbnb.android:lottie:$lottieVersion"
 
     // MongoDB Realm
-    implementation 'io.realm.kotlin:library-base:1.6.1'
+    // not needed as we are using device sync: implementation 'io.realm.kotlin:library-base:1.6.1'
     implementation 'io.realm.kotlin:library-sync:1.6.1'
 }
