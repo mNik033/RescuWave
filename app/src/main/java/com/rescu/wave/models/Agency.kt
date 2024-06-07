@@ -10,7 +10,11 @@ open class Agency(
     var phonenumber : Long = 0,
     var location : String = "",
     var employeeCount : String = "",
-    var vehicleCount : String =""
+    var vehicleCount : String ="",
+    var latitude : Double = 0.00,
+    var longitude : Double = 0.00,
+    var address : String = "",
+    var category : String = ""
 ) : EmbeddedRealmObject {
-    constructor() : this("", "", "", "", 0, "", "", "")
+    constructor() : this("", "", "", "", 0, "", "", "", 0.00, 0.00, "", "")
 }

@@ -1,3 +1,70 @@
 <resources>
     <string name="app_name">RescuWave</string>
+    <string-array name="states">
+        <item>Andhra Pradesh</item>
+        <item>Arunachal Pradesh</item>
+        <item>Assam</item>
+        <item>Bihar</item>
+        <item>Chhattisgarh</item>
+        <item>Goa</item>
+        <item>Gujarat</item>
+        <item>Haryana</item>
+        <item>Himachal Pradesh</item>
+        <item>Jharkhand</item>
+        <item>Karnataka</item>
+        <item>Kerala</item>
+        <item>Madhya Pradesh</item>
+        <item>Maharashtra</item>
+        <item>Manipur</item>
+        <item>Meghalaya</item>
+        <item>Mizoram</item>
+        <item>Nagaland</item>
+        <item>Odisha</item>
+        <item>Punjab</item>
+        <item>Rajasthan</item>
+        <item>Sikkim</item>
+        <item>Tamil Nadu</item>
+        <item>Telangana</item>
+        <item>Tripura</item>
+        <item>Uttar Pradesh</item>
+        <item>Uttarakhand</item>
+        <item>West Bengal</item>
+        <item>Andaman and Nicobar Islands</item>
+        <item>Chandigarh</item>
+        <item>Dadra and Nagar Haveli and Daman and Diu</item>
+        <item>Delhi</item>
+        <item>Lakshadweep</item>
+        <item>Puducherry</item>
+    </string-array>
+    <string-array name="rescue_agencies">
+        <item>National Disaster Response Force (NDRF)</item>
+        <item>Research and Analysis Wing (RAW)</item>
+        <item>State Disaster Response Force (SDRF)</item>
+        <item>Emergency Medical Services (EMS)</item>
+        <item>Central Industrial Security Force (CISF)</item>
+        <item>Central Reserve Police Force (CRPF)</item>
+        <item>Fire and Rescue Services</item>
+        <item>Local Police Department</item>
+        <item>Search and Rescue Teams</item>
+    </string-array>
+    <string-array name="agency_categories">
+        <item>Fire</item>
+        <item>Ambulance</item>
+        <item>Natural Disaster</item>
+        <item>Accident</item>
+        <item>Women Safety</item>
+        <item>Others</item>
+    </string-array>
+    <string-array name="num_employees">
+        <item>Less than 10</item>
+        <item>10 to 50</item>
+        <item>50 to 100</item>
+        <item>More than 100</item>
+    </string-array>
+    <string-array name="num_vehicles">
+        <item>Less than 2</item>
+        <item>2 to 5</item>
+        <item>5 to 10</item>
+        <item>More than 10</item>
+    </string-array>
 </resources>

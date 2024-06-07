@@ -43,7 +43,26 @@
                 app:boxCornerRadiusBottomEnd="8dp">
 
                 <AutoCompleteTextView
-                    android:id="@+id/drop1"
+                    android:id="@+id/autoCompleteAgencyType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="60dp"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Agency Category"
+                android:layout_marginBottom="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompleteAgencyCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="60dp"
@@ -156,7 +175,7 @@
                 app:boxCornerRadiusBottomEnd="8dp">
 
                 <AutoCompleteTextView
-                    android:id="@+id/drop2"
+                    android:id="@+id/autoCompleteState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="60dp"
@@ -238,7 +257,7 @@
                 app:boxCornerRadiusBottomEnd="8dp">
 
                 <AutoCompleteTextView
-                    android:id="@+id/drop3"
+                    android:id="@+id/autoCompleteEmployees"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="60dp"
@@ -258,7 +277,7 @@
                 app:boxCornerRadiusBottomEnd="8dp">
 
                 <AutoCompleteTextView
-                    android:id="@+id/drop4"
+                    android:id="@+id/autoCompleteVehicles"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="60dp"
