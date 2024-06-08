@@ -157,6 +157,9 @@ class MapAgencyFragment : Fragment(), OnMapReadyCallback {
             var firstLocation: LatLng? = null
 
             for (emergency in emergencies) {
+                if(!emergency.emergencyTypes.contains(AgencyManager.agency!!.category)
+                    && !emergency.emergencyTypes.contains("Others"))
+                    continue
                 if(emergency.agenciesInvolved.contains(AgencyManager.agency))
                     RealmStuff.currentEmergencyId = emergency._id
                 val location = LatLng(emergency.latitude, emergency.longitude)
