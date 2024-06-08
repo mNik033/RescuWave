@@ -1,5 +1,6 @@
 package com.rescu.wave
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -23,6 +24,12 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val sharedPref = this@MainActivity.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putString(getString(R.string.user_type), "user")
+            apply()
+        }
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragContainer) as NavHostFragment

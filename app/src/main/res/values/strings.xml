@@ -67,4 +67,5 @@
         <item>5 to 10</item>
         <item>More than 10</item>
     </string-array>
+    <string name="user_type" />
 </resources>

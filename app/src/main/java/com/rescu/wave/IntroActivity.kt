@@ -1,5 +1,6 @@
 package com.rescu.wave
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -33,9 +34,16 @@ class IntroActivity : AppCompatActivity() {
 
         val user = auth.currentUser
 
+        val sharedPreferences = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val isUser = sharedPreferences.getBoolean("type", true)
+
         // Check if user is already signed-in
         if (user != null) {
-            startActivity(Intent(this, MainActivity::class.java))
+            if(isUser){
+                startActivity(Intent(this, MainActivity::class.java))
+            }else{
+                startActivity(Intent(this, MainActivityAgency::class.java))
+            }
             finish()
         }
 

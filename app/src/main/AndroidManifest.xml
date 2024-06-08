@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RescuWave"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${googleMapsApiKey}" />
+        <activity
+            android:name=".MainActivityAgency"
+            android:exported="false" />
         <activity
             android:name=".EmergencyCallActivity"
             android:exported="false" />

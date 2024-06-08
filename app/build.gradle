@@ -19,6 +19,10 @@ android {
 
         buildConfigField "String", "REALM_APP_ID", "\"${MY_REALM_APP_ID}\""
 
+        manifestPlaceholders = [
+                googleMapsApiKey: project.findProperty("GOOGLE_MAPS_API_KEY") ?: ""
+        ]
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -96,6 +100,12 @@ dependencies {
 
     // location tracking
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    // Google Maps
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
+
+    // Google Places
+    implementation "com.google.android.libraries.places:places:3.1.0"
 
     //lottie files
     def lottieVersion = "6.4.0"

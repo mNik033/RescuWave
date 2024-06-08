@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.fragment.app.FragmentContainerView
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/agencyMapFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivityAgency"/>
+
+    <FrameLayout
+        android:id="@+id/standard_bottom_sheet"
+        style="@style/Widget.Material3.BottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="24dp"
+        android:elevation="8dp"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="144dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingVertical="16dp">
+
+            <TextView
+                android:id="@+id/emergencyType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selected emergency: none"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:paddingVertical="16dp"/>
+
+            <TextView
+                android:id="@+id/emergencyLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select an emergency to view it's details"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/emergencyUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Reported by: "
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/emergencyTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Time: "
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/emergencyAgenciesInvolved"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Agencies involved: \n"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:paddingBottom="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="60dp"
+                android:visibility="gone"
+                app:icon="@drawable/baseline_phone_24"
+                android:text="Call"
+                android:layout_marginTop="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNavigate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="60dp"
+                android:visibility="gone"
+                android:layout_gravity="end"
+                app:icon="@drawable/baseline_navigation_24"
+                android:text="Navigate to location"
+                android:layout_marginTop="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAccept"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="60dp"
+                android:visibility="gone"
+                android:layout_gravity="end"
+                app:icon="@drawable/baseline_done_24"
+                android:backgroundTint="@color/quantum_amberA700"
+                android:text="ACCEPT EMERGENCY REQUEST"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

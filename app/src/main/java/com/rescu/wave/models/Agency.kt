@@ -16,5 +16,16 @@ open class Agency(
     var address : String = "",
     var category : String = ""
 ) : EmbeddedRealmObject {
+    // override equals method to compare based on agency id
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Agency
+
+        if (id != other.id) return false
+
+        return true
+    }
     constructor() : this("", "", "", "", 0, "", "", "", 0.00, 0.00, "", "")
 }

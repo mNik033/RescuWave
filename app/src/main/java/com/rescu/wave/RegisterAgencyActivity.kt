@@ -149,8 +149,7 @@ class RegisterAgencyActivity : BaseActivity() {
                                 .set(agency, SetOptions.merge())
                             Toast.makeText(this,
                                 "Registered successfully as " + type,Toast.LENGTH_LONG).show()
-                            // TODO: launch main activity corresponding to agency instead
-                            val intent = Intent(this, MainActivity::class.java)
+                            val intent = Intent(this, MainActivityAgency::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
                             finish()
