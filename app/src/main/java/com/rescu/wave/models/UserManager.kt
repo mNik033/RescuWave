@@ -1,5 +1,6 @@
 package com.rescu.wave.models
 
+import android.location.Location
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -7,6 +8,7 @@ object UserManager {
     var user: User? = null
         private set
 
+    var userLocation: Location? = null
     private val firestore by lazy { FirebaseFirestore.getInstance() }
     private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
 

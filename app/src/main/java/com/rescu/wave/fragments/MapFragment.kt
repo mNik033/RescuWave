@@ -1,21 +1,39 @@
 package com.rescu.wave.fragments
 
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.rescu.wave.R
 import com.rescu.wave.RealmViewModel
-import kotlinx.android.synthetic.main.fragment_map.mapText
+import com.rescu.wave.adapters.RescueAgencyAdapter
+import com.rescu.wave.models.UserManager
+import kotlinx.android.synthetic.main.fragment_map.btnArrivingAgencies
+import kotlinx.android.synthetic.main.fragment_map.no_agencies_text
 
-// TODO: Implement map to show locations of user as well as rescue agencies
-
-class MapFragment : Fragment() {
+class MapFragment : Fragment(), OnMapReadyCallback {
 
     private val viewModel: RealmViewModel by viewModels()
+    private lateinit var agenciesRecyclerView: RecyclerView
+    private var agenciesAdapter: RescueAgencyAdapter? = null
+    private lateinit var map: GoogleMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,24 +45,86 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.emergencies.observe(viewLifecycleOwner, Observer { emergencyList ->
-            if(!emergencyList.isNullOrEmpty()){
-                mapText.text = "" //  clear previous text
-                for(it in emergencyList){
-                    mapText.append("${it.user?.name} has the emergencies regarding:  ")
-                    mapText.append(it.emergencyTypes.joinToString(", "))
-                    mapText.append("with the coordinates ${it.latitude}, ${it.longitude}, address: ${it.address}.")
-                    mapText.append("\nThe agencies involved are: \n")
-                    for(agency in it.agenciesInvolved)
-                        mapText.append("$agency, ")
-                    mapText.append("\nWith the timestamp: ${it.timestamp}\n")
+        val mapFragment = childFragmentManager.findFragmentById(R.id.userMapFragment) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+        agenciesRecyclerView = view.findViewById(R.id.rv_agencies)
+
+        viewModel.emergencies.observe(viewLifecycleOwner) { emergencyList ->
+            emergencyList.forEach {
+                if (it.user?.id == UserManager.user?.id) {
+                    agenciesAdapter = RescueAgencyAdapter(it.agenciesInvolved, ::onCallClick, ::onMessageClick)
+                    agenciesRecyclerView.adapter = agenciesAdapter
+                    if(it.agenciesInvolved.isNotEmpty()) {
+                        no_agencies_text.visibility = View.GONE
+                    }
                 }
             }
-        })
+        }
+
+        btnArrivingAgencies.setOnClickListener {
+            val bottomSheetBehavior = BottomSheetBehavior.from(requireView().findViewById(R.id.bottom_sheet_agencies))
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
     }
 
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+        UserManager.userLocation?.let {
+            val location = LatLng(it.latitude, it.longitude)
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 7f))
+        }
+        fetchAndDisplayAgency()
+    }
+
+    private fun fetchAndDisplayAgency() {
+        viewModel.emergencies.observe(viewLifecycleOwner) { emergencyList ->
+            // clear all existing markers from the map
+            // to remove markers for deleted emergencies
+            map.clear()
+            emergencyList.forEach { emergency ->
+                if (emergency.user?.id == UserManager.user?.id) {
+                    emergency.agenciesInvolved.forEach { agency ->
+                        val location = LatLng(agency.latitude, agency.longitude)
+                        val iconResource = when (agency.category) {
+                            "Ambulance" -> R.drawable.ic_map_ambulance
+                            "Accident" -> R.drawable.ic_map_accident
+                            "Fire" -> R.drawable.ic_map_fire
+                            "Natural Disaster" -> R.drawable.ic_map_accident
+                            "Women Safety" -> R.drawable.ic_map_police
+                            else -> R.drawable.ic_map_others
+                        }
+                        val icon = bitmapDescriptorFromVector(iconResource)
+                        map.addMarker(
+                            MarkerOptions().position(location).title(agency.type).icon(icon)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun  bitmapDescriptorFromVector(vectorResId:Int): BitmapDescriptor {
+        val vectorDrawable = ContextCompat.getDrawable(requireContext(), vectorResId);
+        vectorDrawable!!.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        val bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        val canvas =  Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    private fun onCallClick(phoneNumber: String) {
+        val intent = Intent(Intent.ACTION_DIAL).apply {
+            data = Uri.parse("tel:$phoneNumber")
+        }
+        startActivity(intent)
+    }
+
+    private fun onMessageClick(phoneNumber: String) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse("sms:$phoneNumber")
+        }
+        startActivity(intent)
+    }
 }

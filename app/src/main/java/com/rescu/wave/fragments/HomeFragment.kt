@@ -32,6 +32,7 @@ import com.rescu.wave.FirstAidsActivity
 import com.rescu.wave.RealmViewModel
 import com.rescu.wave.RealmStuff
 import com.rescu.wave.R
+import com.rescu.wave.models.UserManager
 import java.util.Locale
 
 class HomeFragment : Fragment() {
@@ -163,6 +164,7 @@ class HomeFragment : Fragment() {
         // fetch the last location
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             location?.let {
+                UserManager.userLocation = it
                 val latitude = it.latitude
                 val longitude = it.longitude
                 addr = getAddressFromLatLng(latitude, longitude, locBtn)
@@ -179,6 +181,7 @@ class HomeFragment : Fragment() {
             override fun isCancellationRequested() = false
         }).addOnSuccessListener { location: Location? ->
             location?.let {
+                UserManager.userLocation = it
                 Toast.makeText(activity, "Current location updated", Toast.LENGTH_SHORT).show()
                 val address = it.toString()
                 val latitude = it.latitude

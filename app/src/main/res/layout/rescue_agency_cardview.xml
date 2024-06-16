@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:layout_marginVertical="8dp"
+    android:background="@drawable/rounded"
+    android:backgroundTint="@color/quantum_white_100"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:focusable="true">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/agency_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:background="@color/quantum_amber50"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_vehicle_others"
+        app:contentPadding="8dp"
+        app:shapeAppearanceOverlay="@style/circleImageView" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/message_icon"
+        android:layout_toEndOf="@id/agency_icon"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/agency_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Agency Type"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/agency_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:text="Location"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/message_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/call_icon"
+        android:src="@drawable/baseline_message_24"
+        app:tint="#FF46454D" />
+
+    <ImageView
+        android:id="@+id/call_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/baseline_phone_24"
+        app:tint="#FF46454D" />
+
+</RelativeLayout>
