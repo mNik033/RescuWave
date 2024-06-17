@@ -1,48 +1,30 @@
 package com.rescu.wave.fragments
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
-import android.location.Location
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.chinalwb.slidetoconfirmlib.ISlideListener
 import com.chinalwb.slidetoconfirmlib.SlideToConfirm
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationToken
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.gms.tasks.OnTokenCanceledListener
+import com.rescu.wave.AppInitializer
 import com.rescu.wave.BaseActivity
 import com.rescu.wave.EmergencyCallActivity
 import com.rescu.wave.FirstAidsActivity
-import com.rescu.wave.RealmViewModel
-import com.rescu.wave.RealmStuff
 import com.rescu.wave.R
-import com.rescu.wave.models.UserManager
-import java.util.Locale
+import com.rescu.wave.RealmViewModel
 
 class HomeFragment : Fragment() {
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private val selectedEmergencies = mutableListOf<String>()
     private val viewModel: RealmViewModel by viewModels()
-    var lat : Double = 0.0
-    var long : Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,23 +37,19 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        }
+
         val locationButton = view.findViewById<Button>(R.id.button_location)
 
-        if (ContextCompat.checkSelfPermission(requireActivity().baseContext,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE)
-        } else {
-            Handler(Looper.getMainLooper()).post {
-                // delay context-sensitive operations
-                // until the fragment is fully attached
-                if (isAdded) {
-                    fetchLocation(locationButton)
-                }
-            }
+        if(!AppInitializer.currentAddress.isNullOrEmpty()) {
+            locationButton.text = AppInitializer.currentAddress
+        }
 
+        locationButton.setOnClickListener {
+            fetchAndUpdateLocation()
         }
 
         val emergencyButtons : List<Button> = listOf(
@@ -123,8 +101,8 @@ class HomeFragment : Fragment() {
                 val emergencyInfo = Bundle()
                 emergencyInfo.putStringArrayList("emergencies", ArrayList(selectedEmergencies))
                 emergencyInfo.putString("address", locationButton.text.toString())
-                emergencyInfo.putDouble("latitude", lat)
-                emergencyInfo.putDouble("longitude", long)
+                emergencyInfo.putDouble("latitude", AppInitializer.currentLocation?.latitude ?: 0.0)
+                emergencyInfo.putDouble("longitude", AppInitializer.currentLocation?.longitude ?: 0.0)
                 intent.putExtras(emergencyInfo)
                 startActivity(intent)
 
@@ -145,73 +123,35 @@ class HomeFragment : Fragment() {
         if(viewModel.getEmergencyByUserID(uid)!=null) {
             slideToConfirm?.visibility = View.GONE
             viewEmergencyButton?.visibility = View.VISIBLE
-            RealmStuff.currentEmergencyId = viewModel.getEmergencyByUserID(uid)
+            AppInitializer.currentEmergencyId = viewModel.getEmergencyByUserID(uid)
         }else{
             slideToConfirm?.visibility = View.VISIBLE
             viewEmergencyButton?.visibility = View.GONE
         }
     }
 
-    private fun fetchLocation(locBtn: Button) {
-        var addr : String? = null
-        if (ActivityCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-
-        // fetch the last location
-        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            location?.let {
-                UserManager.userLocation = it
-                val latitude = it.latitude
-                val longitude = it.longitude
-                addr = getAddressFromLatLng(latitude, longitude, locBtn)
+    private fun fetchAndUpdateLocation() {
+        val locationButton = view?.findViewById<Button>(R.id.button_location)
+        AppInitializer.instance.fetchCurrentLocation { address ->
+            if (address != null) {
+                Toast.makeText(activity, getString(R.string.updated_location),
+                    Toast.LENGTH_SHORT).show()
+                locationButton?.text = address.getAddressLine(0)
+            } else {
+                Toast.makeText(activity,getString(R.string.check_location_settings),
+                    Toast.LENGTH_SHORT).show()
             }
-        }.addOnFailureListener {
-            Toast.makeText(requireContext(), "Last location not available, fetching new...", Toast.LENGTH_SHORT).show()
         }
-
-        if(addr!=null) return
-
-        // if not available, get the current location
-        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, object : CancellationToken(){
-            override fun onCanceledRequested(p0: OnTokenCanceledListener) = CancellationTokenSource().token
-            override fun isCancellationRequested() = false
-        }).addOnSuccessListener { location: Location? ->
-            location?.let {
-                UserManager.userLocation = it
-                Toast.makeText(activity, "Current location updated", Toast.LENGTH_SHORT).show()
-                val address = it.toString()
-                val latitude = it.latitude
-                val longitude = it.longitude
-                addr = getAddressFromLatLng(latitude, longitude, locBtn)
-            }
-        }.addOnFailureListener {
-            Toast.makeText(activity, "Failed to fetch current location", Toast.LENGTH_SHORT).show()
-        }
-
     }
 
-    private fun getAddressFromLatLng(latitude: Double, longitude: Double, locBtn: Button): String? {
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        val addresses: List<Address>?
-
-        return try {
-            addresses = geocoder.getFromLocation(latitude, longitude, 1)
-            if (addresses != null && addresses.isNotEmpty()) {
-                val address = addresses[0]
-                lat = latitude
-                long = longitude
-                locBtn.text = address.getAddressLine(0)
-                address.getAddressLine(0) // Get the full address
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                fetchAndUpdateLocation()
             } else {
-                null
+                Toast.makeText(requireContext(), "Location permission denied", Toast.LENGTH_SHORT).show()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
         }
     }
 

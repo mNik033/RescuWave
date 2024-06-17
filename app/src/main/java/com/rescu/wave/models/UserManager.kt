@@ -8,7 +8,6 @@ object UserManager {
     var user: User? = null
         private set
 
-    var userLocation: Location? = null
     private val firestore by lazy { FirebaseFirestore.getInstance() }
     private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
 

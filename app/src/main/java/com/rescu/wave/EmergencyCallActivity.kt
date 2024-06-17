@@ -32,10 +32,10 @@ class EmergencyCallActivity : BaseActivity() {
         setContentView(binding.root)
 
         if(viewModel.getEmergencyByUserID(getCurrentUserID())!=null){
-            RealmStuff.currentEmergencyId = viewModel.getEmergencyByUserID(getCurrentUserID())
+            AppInitializer.currentEmergencyId = viewModel.getEmergencyByUserID(getCurrentUserID())
         }
 
-        if(RealmStuff.currentEmergencyId == null){
+        if(AppInitializer.currentEmergencyId == null){
             // we'll add new emergency only if there's
             // no pending emergency for that user
             // otherwise we'll just display the emergency screen
@@ -69,8 +69,8 @@ class EmergencyCallActivity : BaseActivity() {
 
         btnSafeNow.setOnClickListener {
             // remove the current emergency from database
-            viewModel.deleteEmergency(RealmStuff.currentEmergencyId!!)
-            RealmStuff.currentEmergencyId = null
+            viewModel.deleteEmergency(AppInitializer.currentEmergencyId!!)
+            AppInitializer.currentEmergencyId = null
 
             headertxt.text = "Marked as safe ✅"
             desctxt.text = "Concerned authorities have been notified of the same. Please take care."

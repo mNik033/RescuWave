@@ -161,7 +161,7 @@ class MapAgencyFragment : Fragment(), OnMapReadyCallback {
                     && !emergency.emergencyTypes.contains("Others"))
                     continue
                 if(emergency.agenciesInvolved.contains(AgencyManager.agency))
-                    RealmStuff.currentEmergencyId = emergency._id
+                    AppInitializer.currentEmergencyId = emergency._id
                 val location = LatLng(emergency.latitude, emergency.longitude)
                 val marker = map.addMarker(
                     MarkerOptions().position(location).title(emergency.user?.name)
@@ -170,7 +170,7 @@ class MapAgencyFragment : Fragment(), OnMapReadyCallback {
                     (emergencyMap as MutableMap<Marker, Emergency>)[marker] = emergency
                     // update the marker color to notify that
                     // this is the currently accepted emergency
-                    if (emergency._id == RealmStuff.currentEmergencyId) {
+                    if (emergency._id == AppInitializer.currentEmergencyId) {
                         setMarkerColor(marker, BitmapDescriptorFactory.HUE_ORANGE)
                         firstLocation = LatLng(emergency.latitude, emergency.longitude)
                     }
@@ -191,13 +191,13 @@ class MapAgencyFragment : Fragment(), OnMapReadyCallback {
     private fun acceptRequest(emergency: Emergency) {
         AgencyManager.agency?.let { currentAgency ->
             viewLifecycleOwner.lifecycleScope.launch {
-                val realm = RealmStuff.realm
+                val realm = AppInitializer.realm
                 realm.write {
                     // update the emergency with the new agency
                     val emergencyToUpdate = query<Emergency>("_id == $0", emergency._id).first().find()
                     if (emergencyToUpdate != null && !emergencyToUpdate.agenciesInvolved.contains(currentAgency)) {
                         emergencyToUpdate.agenciesInvolved.add(currentAgency)
-                        RealmStuff.currentEmergencyId = emergencyToUpdate._id
+                        AppInitializer.currentEmergencyId = emergencyToUpdate._id
                     }
                 }
             }

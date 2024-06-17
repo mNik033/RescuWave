@@ -17,7 +17,7 @@ import org.mongodb.kbson.ObjectId
 
 class RealmViewModel : ViewModel() {
 
-    private val realm = RealmStuff.realm
+    private val realm = AppInitializer.realm
 
     private val _emergencies = MutableLiveData<List<Emergency>>()
     val emergencies: LiveData<List<Emergency>> get() = _emergencies
@@ -50,7 +50,7 @@ class RealmViewModel : ViewModel() {
         viewModelScope.launch {
             realm.write {
                 val temp = copyToRealm(emergency, UpdatePolicy.ALL)
-                RealmStuff.currentEmergencyId = temp._id
+                AppInitializer.currentEmergencyId = temp._id
             }
             loadEmergencies()
         }

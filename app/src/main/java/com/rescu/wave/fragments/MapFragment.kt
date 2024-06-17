@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.rescu.wave.AppInitializer
 import com.rescu.wave.R
 import com.rescu.wave.RealmViewModel
 import com.rescu.wave.adapters.RescueAgencyAdapter
@@ -71,7 +72,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        UserManager.userLocation?.let {
+        AppInitializer.currentLocation?.let {
             val location = LatLng(it.latitude, it.longitude)
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 7f))
         }

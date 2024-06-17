@@ -40,10 +40,7 @@ class RegisterAgencyActivity : BaseActivity() {
 
     private val mFireStore = FirebaseFirestore.getInstance()
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
-    var lat: Double = 0.0
-    var long: Double = 0.0
 
     lateinit var agencyTypeTV : AutoCompleteTextView
     lateinit var agencyCategoryTV : AutoCompleteTextView
@@ -100,7 +97,6 @@ class RegisterAgencyActivity : BaseActivity() {
 
         emailET.setText(email)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         btnGPS.setOnClickListener {
             if (ContextCompat.checkSelfPermission(this.baseContext,
                     android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -143,7 +139,9 @@ class RegisterAgencyActivity : BaseActivity() {
                                 }
                             )
                             val agency = Agency(firebaseUser.uid, type, firebaseEmail, "", phone,
-                                location, employeeCount, vehicleCount, lat, long, location, category)
+                                location, employeeCount, vehicleCount,
+                                AppInitializer.currentLocation?.latitude ?: 0.0,
+                                AppInitializer.currentLocation?.longitude ?: 0.0, location, category)
                             mFireStore.collection("agencies")
                                 .document(getCurrentUserID())
                                 .set(agency, SetOptions.merge())
@@ -208,44 +206,13 @@ class RegisterAgencyActivity : BaseActivity() {
     }
 
     private fun fetchLocation() {
-        var addr: Address? = null
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-
-        // fetch the last location
-        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            location?.let {
-                val latitude = it.latitude
-                val longitude = it.longitude
-                addr = getAddressFromLatLng(latitude, longitude)
-                // update UI accordingly
-                updateTextViews(addr)
+        AppInitializer.instance.fetchCurrentLocation { address ->
+            if (address != null) {
+                updateTextViews(address)
+            } else {
+                Toast.makeText(this,getString(R.string.check_location_settings),
+                    Toast.LENGTH_SHORT).show()
             }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Last location not available, fetching new...", Toast.LENGTH_SHORT).show()
-        }
-
-        if (addr != null) return
-
-        // if not available, get the current location
-        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, object : CancellationToken(){
-            override fun onCanceledRequested(p0: OnTokenCanceledListener) = CancellationTokenSource().token
-            override fun isCancellationRequested() = false
-        }).addOnSuccessListener { location: Location? ->
-            location?.let {
-                Toast.makeText(this, "Current location updated", Toast.LENGTH_SHORT).show()
-                val latitude = it.latitude
-                val longitude = it.longitude
-                addr = getAddressFromLatLng(latitude, longitude)
-                // update UI accordingly
-                updateTextViews(addr)
-            }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Failed to fetch current location", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -254,24 +221,6 @@ class RegisterAgencyActivity : BaseActivity() {
             addressET.setText(it.getAddressLine(0))
             districtET.setText(it.locality)
             addressStateTV.setText(it.adminArea)
-        }
-    }
-
-    private fun getAddressFromLatLng(latitude: Double, longitude: Double): Address? {
-        val geocoder = Geocoder(this, Locale.getDefault())
-        val addresses: List<Address>?
-
-        return try {
-            addresses = geocoder.getFromLocation(latitude, longitude, 1)
-            if (addresses != null && addresses.isNotEmpty()) {
-                val address = addresses[0]
-                address
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
         }
     }
 

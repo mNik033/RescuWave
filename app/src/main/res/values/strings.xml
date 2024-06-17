@@ -68,4 +68,6 @@
         <item>More than 10</item>
     </string-array>
     <string name="user_type" />
+    <string name="check_location_settings">Could not update location. Please enable location access in settings.</string>
+    <string name="updated_location">Updated current location</string>
 </resources>
