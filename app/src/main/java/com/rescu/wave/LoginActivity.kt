@@ -157,10 +157,19 @@ class LoginActivity : BaseActivity() {
                 }
             }else {
                 // Signed-in successfully
-                // TODO: Launch respective activities for agency and supervisor
-                val intent = Intent(this, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
+                FirestoreClass().isUser(user!!) {
+                    if(it) {
+                        FirestoreClass().signInUser(this)
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    } else {
+                        val intent = Intent(this, MainActivityAgency::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }
+                    finish()
+                }
                 Toast.makeText(this, "Signed-in successfully!", Toast.LENGTH_LONG).show()
             }
         } else {
@@ -187,11 +196,17 @@ class LoginActivity : BaseActivity() {
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(ContentValues.TAG, "signInWithEmail:success")
-                        FirestoreClass().signInUser(this)
                         Toast.makeText(baseContext, "Signed in successfully!",
                             Toast.LENGTH_LONG).show()
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
+                        FirestoreClass().isUser(task.result.user!!) {
+                            if(it) {
+                                FirestoreClass().signInUser(this)
+                                startActivity(Intent(this, MainActivity::class.java))
+                            } else {
+                                startActivity(Intent(this, MainActivityAgency::class.java))
+                            }
+                            finish()
+                        }
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(ContentValues.TAG, "signInWithEmail:failure", task.exception)

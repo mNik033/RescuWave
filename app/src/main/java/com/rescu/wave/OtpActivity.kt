@@ -19,6 +19,7 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.rescu.wave.databinding.ActivityOtpBinding
+import com.rescu.wave.firebase.FirestoreClass
 import java.util.concurrent.TimeUnit
 
 class OtpActivity : BaseActivity() {
@@ -167,10 +168,19 @@ class OtpActivity : BaseActivity() {
                         startActivity(intent)
                     }else{
                         // Sign in success, update UI with the signed-in user's information
-                        // TODO: Launch respective activities for agency and supervisor
-                        val intent = Intent(this, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
+                        FirestoreClass().isUser(task.result.user!!) {
+                            if(it) {
+                                FirestoreClass().signInUser(this)
+                                val intent = Intent(this, MainActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(intent)
+                            } else {
+                                val intent = Intent(this, MainActivityAgency::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(intent)
+                            }
+                            finish()
+                        }
                         Toast.makeText(this, "Authentication successful", Toast.LENGTH_SHORT).show()
                     }
                 } else {

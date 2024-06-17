@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.rescu.wave.BaseActivity
@@ -66,6 +67,30 @@ class FirestoreClass : BaseActivity() {
             }
         }
         return updated
+    }
+
+    fun isUser(mUser: FirebaseUser, callback: (Boolean) -> Unit) {
+        val userTypeRef = mFireStore.collection("users").document(mUser.uid)
+        userTypeRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                callback(true) // user document exists, mUser is a user
+            } else {
+                // check for agency document if user document doesn't exist
+                val agencyRef = mFireStore.collection("agencies").document(mUser.uid)
+                agencyRef.get().addOnSuccessListener { agencySnapshot ->
+                    if (agencySnapshot.exists()) {
+                        callback(false) // agency document exists, mUser is an agency
+                    } else {
+                        //  assume user if none could be found
+                        callback(true)
+                    }
+                }.addOnFailureListener { exception ->
+                    callback(true) // assuming user if there is an error
+                }
+            }
+        }.addOnFailureListener { exception ->
+            callback(false) // assume agency if there is an error fetching user
+        }
     }
 
 }
