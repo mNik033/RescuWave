@@ -114,4 +114,7 @@ dependencies {
     // MongoDB Realm
     // not needed as we are using device sync: implementation 'io.realm.kotlin:library-base:1.6.1'
     implementation 'io.realm.kotlin:library-sync:1.6.1'
+
+    // Firebase Cloud Messaging
+    implementation 'com.google.firebase:firebase-messaging'
 }
