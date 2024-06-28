@@ -1,9 +1,7 @@
 package com.rescu.wave.fragments
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -55,7 +53,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         viewModel.emergencies.observe(viewLifecycleOwner) { emergencyList ->
             emergencyList.forEach {
                 if (it.user?.id == UserManager.user?.id) {
-                    agenciesAdapter = RescueAgencyAdapter(it.agenciesInvolved, ::onCallClick, ::onMessageClick)
+                    agenciesAdapter = RescueAgencyAdapter(it.agenciesInvolved)
                     agenciesRecyclerView.adapter = agenciesAdapter
                     if(it.agenciesInvolved.isNotEmpty()) {
                         no_agencies_text.visibility = View.GONE
@@ -115,17 +113,4 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private fun onCallClick(phoneNumber: String) {
-        val intent = Intent(Intent.ACTION_DIAL).apply {
-            data = Uri.parse("tel:$phoneNumber")
-        }
-        startActivity(intent)
-    }
-
-    private fun onMessageClick(phoneNumber: String) {
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("sms:$phoneNumber")
-        }
-        startActivity(intent)
-    }
 }

@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/message_icon"
+        android:layout_toStartOf="@+id/contact_icons"
         android:layout_toEndOf="@id/agency_icon"
         android:orientation="vertical">
 
@@ -37,6 +37,8 @@
             android:id="@+id/agency_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:text="Agency Type"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -51,23 +53,36 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/message_icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="16dp"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/call_icon"
-        android:src="@drawable/baseline_message_24"
-        app:tint="#FF46454D" />
-
-    <ImageView
-        android:id="@+id/call_icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+    <LinearLayout
+        android:id="@+id/contact_icons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/baseline_phone_24"
-        app:tint="#FF46454D" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/info_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/baseline_info_24"
+            android:visibility="gone"
+            app:tint="#FF46454D" />
+
+        <ImageView
+            android:id="@+id/message_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/baseline_message_24"
+            app:tint="#FF46454D" />
+
+        <ImageView
+            android:id="@+id/call_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/baseline_phone_24"
+            app:tint="#FF46454D" />
+    </LinearLayout>
 
 </RelativeLayout>

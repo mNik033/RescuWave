@@ -70,4 +70,8 @@
     <string name="user_type" />
     <string name="check_location_settings">Could not update location. Please enable location access in settings.</string>
     <string name="updated_location">Updated current location</string>
+    <string name="fetching_agencies_message">Fetching agencies. Please wait…</string>
+    <string name="tap_info_icon_message">Tap on the info icon to get detailed information about the agency on Google Maps.</string>
+    <string name="nearby_rescue_agencies">Nearby rescue agencies</string>
+    <string name="error_fetching_results_message">Error fetching results. Please check your internet connection</string>
 </resources>

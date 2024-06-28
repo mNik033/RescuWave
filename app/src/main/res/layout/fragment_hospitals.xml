@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="24dp"
+    android:orientation="vertical"
     tools:context=".fragments.HospitalsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hospitals Fragment" />
+        android:layout_height="wrap_content"
+        android:text="@string/nearby_rescue_agencies"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:paddingTop="60dp" />
 
-</FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/tap_info_icon_message"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:paddingVertical="16dp"
+        android:textColor="#FF808080" />
+
+    <TextView
+        android:id="@+id/loadingAgenciesText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/fetching_agencies_message"
+        android:textSize="16sp"
+        android:paddingVertical="16dp"
+        android:textColor="#FF808080" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/nearbyAgenciesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:requiresFadingEdge="vertical"
+        android:paddingTop="16dp" />
+
+</LinearLayout>

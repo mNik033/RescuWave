@@ -5,56 +5,99 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.rescu.wave.AppInitializer
+import com.rescu.wave.BuildConfig
 import com.rescu.wave.R
+import com.rescu.wave.adapters.RescueAgencyAdapter
+import com.rescu.wave.databinding.FragmentHospitalsBinding
+import com.rescu.wave.models.Agency
+import org.json.JSONArray
+import org.json.JSONObject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HospitalsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HospitalsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentHospitalsBinding
+    private lateinit var nearbyAgenciesAdapter: RescueAgencyAdapter
+    private val nearbyRescueAgencies = mutableListOf<Agency>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_hospitals, container, false)
+        // Use binding to inflate the layout
+        binding = FragmentHospitalsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HospitalsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HospitalsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.nearbyAgenciesRecyclerView.layoutManager = LinearLayoutManager(context)
+        nearbyAgenciesAdapter = RescueAgencyAdapter(nearbyRescueAgencies)
+        binding.nearbyAgenciesRecyclerView.adapter = nearbyAgenciesAdapter
+
+        fetchRescueAgencies()
     }
+
+    private fun fetchRescueAgencies() {
+        val apiKey = BuildConfig.GOOGLE_PLACES_API_KEY
+        val location = "${AppInitializer.currentLocation?.latitude},${AppInitializer.currentLocation?.longitude}"
+        val radius = 5000
+        val types = listOf("fire_station", "hospital", "police")
+        val apiUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$location&radius=$radius&key=$apiKey"
+
+        types.forEach { type -> sendRequest("$apiUrl&type=$type", type) }
+    }
+
+    private fun sendRequest(apiUrl: String, type: String) {
+        val request = JsonObjectRequest(
+            Request.Method.GET, apiUrl, null,
+            { response -> handleResponse(response, type) },
+            { error -> error.printStackTrace() }
+        )
+        Volley.newRequestQueue(context).add(request)
+    }
+
+    private fun handleResponse(response: JSONObject, type: String) {
+        val agenciesArray = response.getJSONArray("results")
+
+        if (agenciesArray.length() == 0) {
+            binding.loadingAgenciesText.text = getString(R.string.error_fetching_results_message)
+        } else {
+            binding.loadingAgenciesText.visibility = View.GONE
+            parseAgencies(agenciesArray, type)
+        }
+
+        nearbyAgenciesAdapter.notifyItemRangeInserted(nearbyAgenciesAdapter.itemCount, agenciesArray.length())
+    }
+
+    private fun parseAgencies(agenciesArray: JSONArray, type: String) {
+        for (i in 0 until agenciesArray.length()) {
+            val agencyJson = agenciesArray.getJSONObject(i)
+
+            val agencyCategory = when (type) {
+                "hospital", "doctor", "drugstore" -> "Ambulance"
+                "police" -> "Women Safety"
+                "fire_station" -> "Fire"
+                else -> "Others"
+            }
+
+            val agencyLocation = agencyJson.getJSONObject("geometry").getJSONObject("location")
+
+            val agency = Agency(
+                type = agencyJson.getString("name"),
+                phonenumber = agencyJson.optString("formatted_phone_number", "0").toLong(),
+                latitude = agencyLocation.getDouble("lat"),
+                longitude = agencyLocation.getDouble("lng"),
+                location = agencyJson.getString("vicinity"),
+                category = agencyCategory
+            )
+
+            nearbyRescueAgencies.add(agency)
+        }
+    }
+
 }

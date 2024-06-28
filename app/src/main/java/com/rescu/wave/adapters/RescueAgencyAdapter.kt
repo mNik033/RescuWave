@@ -1,20 +1,20 @@
 package com.rescu.wave.adapters
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.rescu.wave.R
 import com.rescu.wave.models.Agency
 
-class RescueAgencyAdapter(
-    private val agencies: List<Agency>,
-    private val onCallClick: (String) -> Unit,
-    private val onMessageClick: (String) -> Unit
-) : RecyclerView.Adapter<RescueAgencyAdapter.ItemViewHolder>() {
+class RescueAgencyAdapter(private val agencies: List<Agency>)
+    : RecyclerView.Adapter<RescueAgencyAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val agencyIcon = itemView.findViewById<ImageView>(R.id.agency_icon)
@@ -22,6 +22,7 @@ class RescueAgencyAdapter(
         val agencyLocation = itemView.findViewById<TextView>(R.id.agency_location)
         val agencyCall = itemView.findViewById<ImageView>(R.id.call_icon)
         val agencyMessage = itemView.findViewById<ImageView>(R.id.message_icon)
+        val agencyInfo = itemView.findViewById<ImageView>(R.id.info_icon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -53,20 +54,44 @@ class RescueAgencyAdapter(
         holder.itemView.setOnClickListener {
             isExpanded = !isExpanded
             if (isExpanded) {
+                holder.agencyName.maxLines = Int.MAX_VALUE
+                holder.agencyName.ellipsize = null
                 holder.agencyLocation.maxLines = Int.MAX_VALUE
                 holder.agencyLocation.ellipsize = null
             } else {
+                holder.agencyName.maxLines = 2
+                holder.agencyName.ellipsize = android.text.TextUtils.TruncateAt.END
                 holder.agencyLocation.maxLines = 3
                 holder.agencyLocation.ellipsize = android.text.TextUtils.TruncateAt.END
             }
         }
 
+        if(agency.phonenumber == (0).toLong()) {
+            holder.agencyCall.visibility = View.GONE
+            holder.agencyMessage.visibility = View.GONE
+            holder.agencyInfo.visibility = View.VISIBLE
+        }
+
         holder.agencyCall.setOnClickListener {
-            onCallClick(agency.phonenumber.toString())
+            val intent = Intent(Intent.ACTION_DIAL).apply {
+                data = Uri.parse("tel:${agency.phonenumber}")
+            }
+            startActivity(it.context, intent, null)
         }
 
         holder.agencyMessage.setOnClickListener {
-            onMessageClick(agency.phonenumber.toString())
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse("sms:${agency.phonenumber}")
+            }
+            startActivity(it.context, intent, null)
+        }
+
+        holder.agencyInfo.setOnClickListener {
+            val mapUri = Uri.parse("geo:0,0?q=${agency.latitude},${agency.longitude}")
+            val mapIntent = Intent(Intent.ACTION_VIEW, mapUri).apply {
+                setPackage("com.google.android.apps.maps")
+            }
+            startActivity(it.context, mapIntent, null)
         }
     }
 }

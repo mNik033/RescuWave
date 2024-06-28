@@ -18,6 +18,7 @@ android {
         versionName "1.0"
 
         buildConfigField "String", "REALM_APP_ID", "\"${MY_REALM_APP_ID}\""
+        buildConfigField "String", "GOOGLE_PLACES_API_KEY", "\"${MY_GOOGLE_PLACES_API_KEY}\""
 
         manifestPlaceholders = [
                 googleMapsApiKey: project.findProperty("GOOGLE_MAPS_API_KEY") ?: ""
