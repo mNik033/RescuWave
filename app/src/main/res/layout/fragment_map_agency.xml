@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.fragment.app.FragmentContainerView
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/agencyMapFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
@@ -33,84 +32,157 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingVertical="16dp">
+            android:paddingTop="32dp">
 
             <TextView
                 android:id="@+id/emergencyType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Selected emergency: none"
-                android:textSize="24dp"
+                android:padding="16dp"
+                android:background="@drawable/rounded"
+                android:backgroundTint="@color/quantum_white_100"
+                android:text="Select an emergency to view corresponding information"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                android:paddingVertical="16dp"/>
+                android:textColor="@color/quantum_black_text" />
+
+            <LinearLayout
+                android:id="@+id/emergencyActionCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:background="@drawable/rounded"
+                android:backgroundTint="@color/quantum_white_100"
+                android:padding="16dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAccept"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="60dp"
+                    android:layout_gravity="end"
+                    app:icon="@drawable/baseline_done_24"
+                    app:cornerRadius="8dp"
+                    android:backgroundTint="@color/quantum_googgreenA700"
+                    android:text="ACCEPT EMERGENCY REQUEST" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCall"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="60dp"
+                        app:icon="@drawable/baseline_phone_24"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Call" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnNavigate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="60dp"
+                        android:layout_gravity="end"
+                        app:icon="@drawable/baseline_navigation_24"
+                        app:cornerRadius="8dp"
+                        android:text="Navigate" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/agency_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Reported by"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:textStyle="bold"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/emergencyUser"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBody1" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/emergencyUserPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBody1" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/emergencyInfoCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:background="@drawable/rounded"
+            android:backgroundTint="@color/quantum_white_100"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/emergencyLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select an emergency to view it's details"
-                android:textAppearance="?attr/textAppearanceBody1"
-                android:paddingBottom="8dp" />
+                android:textAppearance="?attr/textAppearanceBody1" />
 
             <TextView
-                android:id="@+id/emergencyUser"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:text="Reported by: "
+                android:layout_marginTop="8dp"
+                android:text="Time of report"
                 android:textAppearance="?attr/textAppearanceBody1"
-                android:paddingBottom="8dp" />
+                android:textStyle="bold"
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/emergencyTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:text="Time: "
-                android:textAppearance="?attr/textAppearanceBody1"
-                android:paddingBottom="8dp" />
+                android:textAppearance="?attr/textAppearanceBody1" />
 
-            <TextView
-                android:id="@+id/emergencyAgenciesInvolved"
+        </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/agenciesInvolvedRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:text="Agencies involved: \n"
-                android:textAppearance="?attr/textAppearanceBody1"
-                android:paddingBottom="8dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="60dp"
-                android:visibility="gone"
-                app:icon="@drawable/baseline_phone_24"
-                android:text="Call"
-                android:layout_marginTop="8dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnNavigate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="60dp"
-                android:visibility="gone"
-                android:layout_gravity="end"
-                app:icon="@drawable/baseline_navigation_24"
-                android:text="Navigate to location"
-                android:layout_marginTop="8dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAccept"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="60dp"
-                android:visibility="gone"
-                android:layout_gravity="end"
-                app:icon="@drawable/baseline_done_24"
-                android:backgroundTint="@color/quantum_amberA700"
-                android:text="ACCEPT EMERGENCY REQUEST"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="8dp"
+                android:requiresFadingEdge="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/rescue_agency_cardview"/>
 
         </LinearLayout>
 

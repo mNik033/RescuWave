@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.rescu.wave.adapters.RescueAgencyAdapter
 import com.rescu.wave.databinding.FragmentMapAgencyBinding
 import com.rescu.wave.models.AgencyManager
 import com.rescu.wave.models.Emergency
@@ -40,6 +42,8 @@ class MapAgencyFragment : Fragment(), OnMapReadyCallback {
     private val viewModel: RealmViewModel by viewModels()
     private lateinit var emergencyMap: Map<Marker, Emergency>
     private var isCameraInitialized = false
+    private lateinit var agenciesInvolvedRecyclerView: RecyclerView
+    private var agenciesInvolvedAdapter: RescueAgencyAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +58,8 @@ class MapAgencyFragment : Fragment(), OnMapReadyCallback {
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.agencyMapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        agenciesInvolvedRecyclerView = view.findViewById(R.id.agenciesInvolvedRecyclerView)
 
         // prevent clicks inside the bottom sheet from being registered as map clicks
         view.findViewById<View>(R.id.standard_bottom_sheet).setOnTouchListener { _, _ -> true }
@@ -88,23 +94,19 @@ class MapAgencyFragment : Fragment(), OnMapReadyCallback {
         val bottomSheet = binding.standardBottomSheet
 
         // set visibility of views
-        binding.emergencyUser.visibility =  View.VISIBLE
-        binding.emergencyTime.visibility = View.VISIBLE
-        binding.emergencyAgenciesInvolved.visibility = View.VISIBLE
-        binding.btnCall.visibility = View.VISIBLE
-        binding.btnNavigate.visibility = View.VISIBLE
-        binding.btnAccept.visibility = View.VISIBLE
+        binding.emergencyActionCard.visibility = View.VISIBLE
+        binding.emergencyInfoCard.visibility = View.VISIBLE
+        binding.agenciesInvolvedRecyclerView.visibility = View.VISIBLE
 
         // update views accordingly
         binding.emergencyType.text = emergency.emergencyTypes
             .takeIf { it.isNotEmpty() }?.joinToString(", ") ?: "Emergency type: Others"
-        binding.emergencyLocation.text = "Address: " +  emergency.address
-        binding.emergencyUser.text = "Reported by: " + emergency.user!!.name
-        binding.emergencyTime.text = "Time Reported: " + convertRealmInstantToNormalDateTime(emergency.timestamp)
-        binding.emergencyAgenciesInvolved.text = "Agencies involved: \n"
-        binding.emergencyAgenciesInvolved.append(emergency.agenciesInvolved
-            .takeIf { it.isNotEmpty() }
-            ?.joinToString("\n") { " • ${it.type} (${it.category})" } ?: "None")
+        binding.emergencyLocation.text = emergency.address
+        binding.emergencyUser.text = emergency.user!!.name
+        binding.emergencyUserPhone.text = emergency.user!!.phone.toString()
+        binding.emergencyTime.text = convertRealmInstantToNormalDateTime(emergency.timestamp)
+        agenciesInvolvedAdapter = RescueAgencyAdapter(emergency.agenciesInvolved)
+        agenciesInvolvedRecyclerView.adapter = agenciesInvolvedAdapter
 
         binding.btnCall.setOnClickListener {
             val phoneNumber = emergency.user!!.phone.toString()
@@ -135,17 +137,11 @@ class MapAgencyFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun clearBottomSheet() {
-        binding.emergencyUser.visibility =  View.GONE
-        binding.emergencyTime.visibility = View.GONE
-        binding.emergencyAgenciesInvolved.visibility = View.GONE
-        binding.btnCall.visibility = View.GONE
-        binding.btnNavigate.visibility = View.GONE
-        binding.btnAccept.visibility = View.GONE
+        binding.emergencyActionCard.visibility = View.GONE
+        binding.emergencyInfoCard.visibility = View.GONE
+        binding.agenciesInvolvedRecyclerView.visibility = View.GONE
 
-        binding.emergencyType.text = "Selected emergency: none"
-        binding.emergencyLocation.text = "Select an emergency to view it's details"
-        binding.emergencyUser.text =  ""
-        binding.emergencyTime.text = ""
+        binding.emergencyType.text = "Select an emergency to view corresponding information"
     }
 
     private fun addMarkersToMap() {
