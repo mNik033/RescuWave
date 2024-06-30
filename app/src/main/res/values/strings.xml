@@ -74,4 +74,8 @@
     <string name="tap_info_icon_message">Tap on the info icon to get detailed information about the agency on Google Maps.</string>
     <string name="nearby_rescue_agencies">Nearby rescue agencies</string>
     <string name="error_fetching_results_message">Error fetching results. Please check your internet connection</string>
+    <string name="enter_emergency_contacts_message">Please enter emergency contacts in the profile section</string>
+    <string name="grant_sms_permission_message">Please grant SMS permission in order to notify emergency contacts</string>
+    <string name="enter_valid_phone_numbers_message">Please enter valid phone numbers</string>
+    <string name="emergency_contacts_limit_message">Please enter up to 3 emergency contacts</string>
 </resources>

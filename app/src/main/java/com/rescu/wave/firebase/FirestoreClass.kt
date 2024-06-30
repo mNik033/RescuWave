@@ -52,7 +52,7 @@ class FirestoreClass : BaseActivity() {
             }
     }
 
-    fun updateUserDetails(image: String?, address: String?): Boolean{
+    fun updateUserDetails(image: String?, address: String?, contacts: ArrayList<Long>?): Boolean{
         var updated = true
         val dbRef = mFireStore.collection("users").document(getCurrentUserID())
         if(image!=null){
@@ -63,6 +63,12 @@ class FirestoreClass : BaseActivity() {
         if(!updated) return updated
         if(address!=null){
             dbRef.set(hashMapOf("savedAddr" to address), SetOptions.merge()).addOnFailureListener {
+                updated = false
+            }
+        }
+        if(!updated) return updated
+        if(contacts != null){
+            dbRef.set(hashMapOf("emergencyContacts" to contacts), SetOptions.merge()).addOnFailureListener {
                 updated = false
             }
         }

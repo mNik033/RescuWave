@@ -20,6 +20,10 @@ class ProfileFragmentViewModel : ViewModel(){
     fun setAddress(newData: String){
         address.value = newData
     }
+    val emergencyContacts = MutableLiveData<ArrayList<Long>>()
+    fun setEmergencyContacts(newData: ArrayList<Long>){
+        emergencyContacts.value = newData
+    }
     val phone = MutableLiveData<Long>()
     fun setPhone(newData: Long){
         phone.value = newData

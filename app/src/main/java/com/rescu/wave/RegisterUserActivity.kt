@@ -130,7 +130,7 @@ class RegisterUserActivity : BaseActivity() {
                 if (task.isSuccessful) {
                     storageRef.downloadUrl.addOnSuccessListener { uri ->
 
-                        val user = User(uid, name, email, uri.toString(), "", "", phone)
+                        val user = User(uid, name, email, uri.toString(), "", "", phone, arrayListOf())
 
                         firestore.collection("users")
                             .document(uid)
@@ -164,7 +164,7 @@ class RegisterUserActivity : BaseActivity() {
         } else {
             hideProgressDialog()
 
-            val user = User(uid, name, email, "", "", "", phone)
+            val user = User(uid, name, email, "", "", "", phone, arrayListOf())
 
             firestore.collection("users")
                 .document(uid)

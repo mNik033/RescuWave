@@ -71,6 +71,7 @@ class MainActivity : BaseActivity() {
         pfViewModel.setName(user.name)
         pfViewModel.setEmail(user.email)
         pfViewModel.setAddress(user.savedAddr)
+        pfViewModel.setEmergencyContacts(user.emergencyContacts)
         pfViewModel.setImage(user.image)
         pfViewModel.setPhone(user.phone)
     }

@@ -141,6 +141,20 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        // Emergency contacts button and corresponding emergency contacts edittext field
+        val emContactsBtn = view.findViewById<LinearLayout>(R.id.emContacts)
+        val emContactsLayout = view.findViewById<TextInputLayout>(R.id.emContactsInputLayout)
+        val pfEmContacts = view.findViewById<EditText>(R.id.emContactsEntryField)
+        emContactsBtn.setOnClickListener {
+            if(emContactsLayout.visibility == View.VISIBLE){
+                TransitionManager.beginDelayedTransition(animContainer as ViewGroup, fwdAxis)
+                emContactsLayout.visibility = View.GONE
+            }else{
+                TransitionManager.beginDelayedTransition(animContainer as ViewGroup, bwdAxis)
+                emContactsLayout.visibility = View.VISIBLE
+            }
+        }
+
         // About button
         val aboutBtn = view.findViewById<LinearLayout>(R.id.about)
         aboutBtn.setOnClickListener {
@@ -156,6 +170,9 @@ class ProfileFragment : Fragment() {
 
         val address : String? = pfViewModel.address.value
         pfAddr.setText(address)
+
+        val emergencyContacts : ArrayList<Long>? = pfViewModel.emergencyContacts.value
+        pfEmContacts.setText(emergencyContacts?.joinToString(" "))
 
         var image : String? = pfViewModel.image.value
         Glide
@@ -198,6 +215,10 @@ class ProfileFragment : Fragment() {
             editable = false
             var newAddr : String? = pfAddr.text.toString()
 
+            val newEmContacts = getEmergencyContacts(pfEmContacts.text.toString())
+            if(newEmContacts == null)
+                return@setOnClickListener
+
             if(pfAddr.text.toString() != address){
                 newAddr = pfAddr.text.toString()
             }
@@ -209,7 +230,7 @@ class ProfileFragment : Fragment() {
                             .addOnSuccessListener {
                                 image = it.toString()
                                 pfViewModel.setImage(image!!)
-                                updated = FirestoreClass().updateUserDetails(image, newAddr)
+                                updated = FirestoreClass().updateUserDetails(image, newAddr, newEmContacts)
                             }.addOnFailureListener {
                                 Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                             }
@@ -217,7 +238,7 @@ class ProfileFragment : Fragment() {
                         Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                     }
             }else{
-                updated = FirestoreClass().updateUserDetails(null, newAddr)
+                updated = FirestoreClass().updateUserDetails(null, newAddr, newEmContacts)
             }
             if(!updated){
                 Toast.makeText(requireContext(),
@@ -230,4 +251,40 @@ class ProfileFragment : Fragment() {
         }
 
     }
+
+    private fun getEmergencyContacts(newContacts: String): ArrayList<Long>? {
+        if(newContacts.isEmpty())
+            return arrayListOf()
+
+        val newEmContactsList = newContacts.split(" ")
+        val newEmContacts: ArrayList<Long> = arrayListOf()
+
+        for (number in newEmContactsList) {
+            if (validNumber(number)) {
+                number.toLongOrNull()?.let {
+                    newEmContacts.add(it)
+                }
+            }else {
+                Toast.makeText(requireContext(),
+                    getString(R.string.enter_valid_phone_numbers_message), Toast.LENGTH_SHORT).show()
+                return null
+            }
+        }
+
+        if(newEmContacts.size > 3) {
+            Toast.makeText(requireContext(),
+                getString(R.string.emergency_contacts_limit_message), Toast.LENGTH_SHORT).show()
+            return null
+        }
+
+        return newEmContacts
+    }
+
+    private fun validNumber(number: String) : Boolean {
+        val validNumber = Regex("^[+]?[0-9]{10}\$")
+        val validNumber2 = Regex("^[+]?"+"91"+"[+]?[0-9]{10}$")
+
+        return number.matches(validNumber) || number.matches(validNumber2)
+    }
+
 }

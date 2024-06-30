@@ -9,7 +9,8 @@ open class User(
     var image: String = "",
     var fcmToken: String = "",
     var savedAddr: String = "",
-    var phone: Long = 0
+    var phone: Long = 0,
+    var emergencyContacts: ArrayList<Long>
 ) : EmbeddedRealmObject {
-    constructor() : this("", "", "", "", "", "", 0)
+    constructor() : this("", "", "", "", "", "", 0, arrayListOf())
 }

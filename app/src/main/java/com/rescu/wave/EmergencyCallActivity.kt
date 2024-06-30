@@ -1,9 +1,12 @@
 package com.rescu.wave
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.telephony.SmsManager
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import com.rescu.wave.databinding.ActivityEmergencyCallBinding
@@ -59,6 +62,12 @@ class EmergencyCallActivity : BaseActivity() {
             }
 
             viewModel.insertEmergency(newEmergency)
+
+            val emergencyTypes = emergencies?.joinToString(", ") ?: "unspecified"
+            for(contact in currentUser!!.emergencyContacts) {
+                checkPermissionAndSendSms(contact.toString(), "Emergency reported by ${currentUser.name}"
+                        + " at $addr with emergency types: ${emergencyTypes}.")
+            }
         }
 
         btnViewMap.setOnClickListener {
@@ -72,8 +81,14 @@ class EmergencyCallActivity : BaseActivity() {
             viewModel.deleteEmergency(AppInitializer.currentEmergencyId!!)
             AppInitializer.currentEmergencyId = null
 
+            val currentUser = UserManager.user
+            for(contact in currentUser!!.emergencyContacts) {
+                checkPermissionAndSendSms(contact.toString(), currentUser.name +
+                        " has marked themselves as safe from the previous emergency.")
+            }
+
             headertxt.text = "Marked as safe ✅"
-            desctxt.text = "Concerned authorities have been notified of the same. Please take care."
+            desctxt.text = "Concerned authorities and your emergency contacts have been notified of the same. Please take care."
             btnViewMap.visibility = View.GONE
             rippleAnim.visibility = View.GONE
             btnSafeNow.text = "GO BACK"
@@ -83,4 +98,18 @@ class EmergencyCallActivity : BaseActivity() {
         }
 
     }
+
+    private fun checkPermissionAndSendSms(phoneNumber: String, message: String) {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+            sendSms(phoneNumber, message)
+        }
+    }
+
+    private fun sendSms(phoneNumber: String, message: String) {
+        val smsManager = SmsManager.getDefault()
+        val parts: ArrayList<String> = smsManager.divideMessage(message)
+        smsManager.sendMultipartTextMessage(phoneNumber, null, parts, null, null)
+    }
+
 }

@@ -23,6 +23,7 @@ import com.rescu.wave.RealmViewModel
 class HomeFragment : Fragment() {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
+    private val SMS_PERMISSION_REQUEST_CODE = 2
     private val selectedEmergencies = mutableListOf<String>()
     private val viewModel: RealmViewModel by viewModels()
 
@@ -40,6 +41,11 @@ class HomeFragment : Fragment() {
         if (ContextCompat.checkSelfPermission(requireContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        }
+
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(android.Manifest.permission.SEND_SMS), SMS_PERMISSION_REQUEST_CODE)
         }
 
         val locationButton = view.findViewById<Button>(R.id.button_location)
@@ -151,6 +157,13 @@ class HomeFragment : Fragment() {
                 fetchAndUpdateLocation()
             } else {
                 Toast.makeText(requireContext(), "Location permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+        if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                Toast.makeText(requireContext(), R.string.enter_emergency_contacts_message, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), R.string.grant_sms_permission_message, Toast.LENGTH_SHORT).show()
             }
         }
     }

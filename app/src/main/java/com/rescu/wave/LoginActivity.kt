@@ -223,8 +223,8 @@ class LoginActivity : BaseActivity() {
                 val firebaseUser: FirebaseUser = task.result!!.user!!
                 val firebaseEmail = firebaseUser.email!!
                 // TODO: Ask for user's name
-                val user = User(firebaseUser.uid, "", firebaseEmail, "")
-                FirestoreClass().registerUser(this, user)
+                // val user = User(firebaseUser.uid, "", firebaseEmail, "")
+                // FirestoreClass().registerUser(this, user)
                 Toast.makeText(this, "You've registered successfully!", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(this, task.exception!!.message, Toast.LENGTH_LONG).show()
